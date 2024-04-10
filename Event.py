@@ -1,12 +1,16 @@
 class Event:
-    def __init__(self, title, t_start, t_end):
+    def __init__(self, title, date_start, date_end, time_start, time_end):
         self.title = title
-        self.t_start = t_start
-        self.t_end = t_end
+        self.date_start = date_start
+        self.date_end = date_end
+        self.time_start = time_start
+        self.time_end = time_end
+
 
 class EventFull(Event):
-    def __init__(self, title, t_start, t_end, note=None, place=None, hyperlink=None):
-        super().__init__(title, t_start, t_end)
+    def __init__(self, title, date_start, date_end, time_start, time_end, note=None, place=None, hyperlink=None):
+        super().__init__(title, date_start, date_end, time_start, time_end)
         self.note = note
         self.place = place
         self.hyperlink = hyperlink
+        # Додумать доп штуки

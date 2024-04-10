@@ -3,6 +3,12 @@ from EventModel import EventModel
 from EventPresenter import EventPresenter
 from EventView import EventView
 
+# Илья
+# GUI
+
+# Вика
+# База данных
+
 # Создаем несколько заметок
 # Добавить чтение событий из файла
 events = [EventFull("Event 1", "20230404", "20230604", note="This is just a note"), EventFull("Event 2", "20230405", "20230407")]

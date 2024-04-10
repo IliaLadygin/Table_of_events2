@@ -1,0 +1,55 @@
+Index: main.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from Event import EventFull\r\nfrom EventModel import EventModel\r\nfrom EventPresenter import EventPresenter\r\nfrom EventView import EventView\r\n\r\n# Создаем несколько заметок\r\n# Добавить чтение событий из файла\r\nevents = [EventFull(\"Event 1\", \"20230404\", \"20230604\", note=\"This is just a note\"), EventFull(\"Event 2\", \"20230405\", \"20230407\")]\r\n# Создаем модель заметок\r\nevent_model = EventModel(events)\r\n# Создаем Presenter для заметок и связываем его с View и Model\r\nevent_presenter = EventPresenter(EventView(EventPresenter), event_model)\r\nprint(event_presenter.model.get_events())\r\n# Добавляем новую заметку\r\nevent_presenter.add_event(EventFull(\"Event 3\", \"20230204\", \"20230604\"))\r\nprint(*event_presenter.model.get_events(), sep=\"\\n\")\r\n# Удаляем заметку\r\nevent_presenter.delete_event_by_index(0)\r\nprint(event_presenter.model.get_events())\r\n# Выводим все события на экран\r\nprint(event_presenter.model.get_events())\r\nprint(5)\r\nprint(\"FixBrainDeads\")\r\nprint(\"FixBrainDeads2\")\r\nprint(\"FixBrainDeads3\")\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/main.py b/main.py
+--- a/main.py	(revision f4cc7f3f9ceded301e518d654a6c534842a8832b)
++++ b/main.py	(date 1712750846549)
+@@ -3,6 +3,12 @@
+ from EventPresenter import EventPresenter
+ from EventView import EventView
+ 
++# Илья
++# GUI
++
++# Вика
++# База данных
++
+ # Создаем несколько заметок
+ # Добавить чтение событий из файла
+ events = [EventFull("Event 1", "20230404", "20230604", note="This is just a note"), EventFull("Event 2", "20230405", "20230407")]
+Index: Event.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>class Event:\r\n    def __init__(self, title, t_start, t_end):\r\n        self.title = title\r\n        self.t_start = t_start\r\n        self.t_end = t_end\r\n\r\nclass EventFull(Event):\r\n    def __init__(self, title, t_start, t_end, note=None, place=None, hyperlink=None):\r\n        super().__init__(title, t_start, t_end)\r\n        self.note = note\r\n        self.place = place\r\n        self.hyperlink = hyperlink\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Event.py b/Event.py
+--- a/Event.py	(revision f4cc7f3f9ceded301e518d654a6c534842a8832b)
++++ b/Event.py	(date 1712750846542)
+@@ -1,12 +1,16 @@
+ class Event:
+-    def __init__(self, title, t_start, t_end):
++    def __init__(self, title, date_start, date_end, time_start, time_end):
+         self.title = title
+-        self.t_start = t_start
+-        self.t_end = t_end
++        self.date_start = date_start
++        self.date_end = date_end
++        self.time_start = time_start
++        self.time_end = time_end
++
+ 
+ class EventFull(Event):
+-    def __init__(self, title, t_start, t_end, note=None, place=None, hyperlink=None):
+-        super().__init__(title, t_start, t_end)
++    def __init__(self, title, date_start, date_end, time_start, time_end, note=None, place=None, hyperlink=None):
++        super().__init__(title, date_start, date_end, time_start, time_end)
+         self.note = note
+         self.place = place
+         self.hyperlink = hyperlink
++        # Додумать доп штуки
