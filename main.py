@@ -20,3 +20,4 @@ print(event_presenter.model.get_events())
 # Выводим все события на экран
 print(event_presenter.model.get_events())
 print(5)
+print("FixBrainDeads")
