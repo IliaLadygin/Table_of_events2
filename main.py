@@ -1,7 +1,7 @@
-from Lib.my_package.Event import EventFull, Event
-from Lib.my_package.EventModel import EventModel
-from Lib.my_package.EventPresenter import EventPresenter
-from Lib.my_package.EventView import EventView
+from Event import EventFull
+from EventModel import EventModel
+from EventPresenter import EventPresenter
+from EventView import EventView
 
 # Создаем несколько заметок
 # Добавить чтение событий из файла
