@@ -1,7 +1,11 @@
 from Event import EventFull
 from EventModel import EventModel
 from EventPresenter import EventPresenter
-from EventView import EventView
+from EventView import EventView, MainWindow
+import sys
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QAction
+from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QVBoxLayout, QWidget
 
 # Илья
 # GUI
@@ -11,18 +15,24 @@ from EventView import EventView
 
 # Создаем несколько заметок
 # Добавить чтение событий из файла
-events = [EventFull("Event 1", "20230404", "20230604", "1300", "1400", note="This is just a note"), EventFull("Event 2", "20230405", "20230407", "1200", "1400")]
+events = [EventFull("Event 1", "20230404", "20230604", "1300", "1400", note="This is just a note"),
+          EventFull("Event 2", "20230405", "20230407", "1200", "1400", note="This is")]
 # Создаем модель заметок
 event_model = EventModel(events)
 # Создаем Presenter для заметок и связываем его с View и Model
 event_presenter = EventPresenter(EventView(EventPresenter), event_model)
 print(event_presenter.model.get_events())
 # Добавляем новую заметку
-event_presenter.add_event(EventFull("Event 3", "20230204", "20230604", "1100", "1600"))
+event_presenter.add_event(EventFull("Event 3", "20230204", "20230604", "1100", "1600", hyperlink="www.google.com"))
 print(*event_presenter.model.get_events(), sep="\n")
 # Удаляем заметку
 event_presenter.delete_event_by_index(0)
 print(event_presenter.model.get_events())
 # Выводим все события на экран
 print(event_presenter.model.get_events())
-print(5)
+# print(event_presenter.get_beauty_event_date())
+print("Starting GUI...")
+app = QApplication(sys.argv)
+window = MainWindow(event_presenter)
+window.show()
+app.exec()

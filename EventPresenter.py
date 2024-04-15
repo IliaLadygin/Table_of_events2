@@ -14,3 +14,15 @@ class EventPresenter:
 
     def update_event_by_index(self, index, new_title, new_t_start, new_t_end):
         self.model.update(index, Event(new_title, new_t_start, new_t_end))
+
+    def get_beauty_event_date(self, event):
+        self.model.get_beauty_date(self, event)
+
+    def get_beauty_event_time(self, event):
+        self.model.get_beauty_date(self, event)
+
+    def get_events(self):
+        return self.model.get_events()
+
+    def get_event_as_dict(self, event):
+        return self.model.get_event_as_dict(event)
