@@ -1,18 +1,32 @@
 import sys
-
+# from PyQt6 import Cont
 from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QVBoxLayout, QWidget, QPushButton, QListWidget
+from PyQt6.QtWidgets import (QApplication,
+                             QMainWindow,
+                             QLabel,
+                             QLineEdit,
+                             QVBoxLayout,
+                             QWidget,
+                             QPushButton,
+                             QListWidget,
+                             QGridLayout,
+                             QCalendarWidget,
+                             QHBoxLayout,
+                             QMenu)
 
 
 class MainWindow(QMainWindow):
     def __init__(self, event_presenter):
         super().__init__()
-        self.setFixedSize(QSize(1000, 500)) # Задание стандартных размеров окна
+
+        # Общие настройки
+        self.setBaseSize(QSize(1000, 1000)) # Задание стандартных размеров окна
         # self.n_times_clicked = 0
         self.setWindowTitle("Table of events") # Название окна
-        self.button_add_event = QPushButton("Добавить событие")
-        # self.button_add_event.clicked.connect(self.the_button_was_clicked)
+
+        # Виджеты (слева направо, сверху вниз)
+        # Первый слой
         self.list_events = QListWidget()
         for event in event_presenter.model.events:
             event_dict = event_presenter.model.get_event_as_dict(event)
@@ -22,16 +36,63 @@ class MainWindow(QMainWindow):
             event_str = ""
             for key, arg in event_dict.items():
                 event_str += key + ": " + str(arg) + "\n"
-            self.list_events.addItem(event_str)
-        self.label_event_view = QLabel()  # показ текста или картинок
+                if key.lower() == "время конца":
+                    break
+            self.list_events.addItem(event_str.strip())
+
+        # Создание контекстного меню
+        # self.ctx_list_events = QMenu()
+        # # Создание действий контекстного меню
+        # action_edit = self.ctx_list_events.addAction("Изменить событие")
+        # action_delete = self.ctx_list_events.addAction("Удалить событие")
+        # # Привязка действий к методам
+        # action_edit.triggered.connect(self.action_edit_is_triggered)
+        # action_delete.triggered.connect(self.action_delete_is_triggered)
+
+        # Создание контекстного меню 2
+        self.list_events.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.list_events.customContextMenuRequested.connect(self.show_ctx_menu_list_events)
+
+        # Кнопка добавления события
+        self.button_add_event = QPushButton("Добавить событие")
+        self.button_add_event.clicked.connect(self.the_event_button_was_clicked)
+
+        # Второй слой
+        # Реализация календаря
+        self.calendar = QCalendarWidget()
+        self.calendar.setFixedSize(QSize(200, 200))
+
+        # Показ полной информации о событии
+        self.event_full_view = QLabel()
+
+        # Информатор (пока не знаю, буду ли делать)
+        self.info_view = QLabel()
+
+
 
         # self.input = QLineEdit()  # Создание строки, в которую можно вводить данные
         # self.input.textChanged.connect(self.label.setText)  # textChanged - сигнал редактирования строки
 
-        # Добавление слоя в которых располагаются виджеты
-        layout = QVBoxLayout()
-        layout.addWidget(self.list_events)
-        layout.addWidget(self.button_add_event)
+        # Добавление слоёв в которых располагаются виджеты
+        # Попытка 1
+        # layout_add = QGridLayout()
+        # layout_add.addWidget(self.list_events, 0, 0, 0, 1, 1, 0, 1, 1)
+        # layout_add.addWidget(self.calendar, 2, 0)
+        # layout_add.addWidget(self.button_add_event, 0, 3, 1, 3)
+        # layout_add.addWidget(self.info_view, 2, 1)
+        # layout_add.addWidget(self.info_view, 3, 3)
+
+        # Попытка 2
+        layout = QHBoxLayout()
+        layout1 = QVBoxLayout()
+        layout1.addWidget(self.list_events)
+        layout1.addWidget(self.button_add_event)
+        layout.addLayout(layout1)
+        layout2 = QVBoxLayout()
+        layout2.addWidget(self.calendar)
+        layout2.addWidget(self.event_full_view)
+        layout2.addWidget(self.info_view)
+        layout.addLayout(layout2)
 
         # Макет
         container = QWidget()
@@ -41,6 +102,23 @@ class MainWindow(QMainWindow):
         # Устанавливаем центральный виджет Window.
         self.setCentralWidget(container)
 
+    # Сигнал о нажатии Добавить событие
+    def the_event_button_was_clicked(self):
+        pass
+
+    # Сигнал о нажатии на событие ПКМ
+    def show_ctx_menu_list_events(self, event):
+        menu = QMenu()
+        menu.addAction(QAction("Отредактировать событие", self))
+        menu.addAction(QAction("Удалить событие", self))
+        menu.exec(event.globalPos())
+
+    # Методы контексного меню
+    def action_edit_is_triggered(self):
+        pass
+
+    def action_delete_is_triggered(self):
+        pass
     # Перехват контексного меню
     # def contextMenuEvent(self, e):
     #     context = QMenu(self)

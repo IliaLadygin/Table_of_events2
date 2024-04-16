@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0640c365-1e7c-4d70-adb8-a52018d1712a" name="Changes" comment="Start point">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_04_2024_19_07__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_10_04_2024_19_07__Changes_.xml" afterDir="false" />
+    <list default="true" id="0640c365-1e7c-4d70-adb8-a52018d1712a" name="Changes" comment="GUI v0.1">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EventModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/EventModel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EventPresenter.py" beforeDir="false" afterPath="$PROJECT_DIR$/EventPresenter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EventView.py" beforeDir="false" afterPath="$PROJECT_DIR$/EventView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,22 +40,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.EventPresenter.executor": "Run",
-    "Python.EventView.executor": "Run",
-    "Python.PyQtExamples.executor": "Run",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.EventPresenter.executor&quot;: &quot;Run&quot;,
+    &quot;Python.EventView.executor&quot;: &quot;Run&quot;,
+    &quot;Python.PyQtExamples.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\ILIA\PycharmProjects\Table_of_events2" />
@@ -160,8 +156,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.EventView" />
         <item itemvalue="Python.PyQtExamples" />
+        <item itemvalue="Python.EventView" />
         <item itemvalue="Python.EventPresenter" />
         <item itemvalue="Python.EventPresenter" />
       </list>
@@ -184,6 +180,7 @@
       <updated>1712748217715</updated>
       <workItem from="1712748225859" duration="711000" />
       <workItem from="1713175168566" duration="397000" />
+      <workItem from="1713254726619" duration="8618000" />
     </task>
     <task id="LOCAL-00001" summary="Initial point">
       <option name="closed" value="true" />
@@ -201,7 +198,15 @@
       <option name="project" value="LOCAL" />
       <updated>1712751041618</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="GUI v0.1">
+      <option name="closed" value="true" />
+      <created>1713180750873</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1713180750873</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -221,12 +226,13 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Initial point" />
     <MESSAGE value="Start point" />
-    <option name="LAST_COMMIT_MESSAGE" value="Start point" />
+    <MESSAGE value="GUI v0.1" />
+    <option name="LAST_COMMIT_MESSAGE" value="GUI v0.1" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Table_of_events2$EventView.coverage" NAME="EventView Coverage Results" MODIFIED="1713179589001" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Table_of_events2$PyQtExamples.coverage" NAME="PyQtExamples Coverage Results" MODIFIED="1713176992492" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/.venv" />
+    <SUITE FILE_PATH="coverage/Table_of_events2$EventView.coverage" NAME="EventView Coverage Results" MODIFIED="1713262502826" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Table_of_events2$PyQtExamples.coverage" NAME="PyQtExamples Coverage Results" MODIFIED="1713262504697" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/.venv" />
     <SUITE FILE_PATH="coverage/Table_of_events2$EventPresenter.coverage" NAME="EventPresenter Coverage Results" MODIFIED="1712748767480" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/.venv/Lib/my_package" />
-    <SUITE FILE_PATH="coverage/Table_of_events2$main.coverage" NAME="main Coverage Results" MODIFIED="1713180682664" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Table_of_events2$main.coverage" NAME="main Coverage Results" MODIFIED="1713262744049" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
