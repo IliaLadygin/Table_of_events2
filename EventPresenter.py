@@ -19,7 +19,7 @@ class EventPresenter:
         self.model.get_beauty_date(self, event)
 
     def get_beauty_event_time(self, event):
-        self.model.get_beauty_date(self, event)
+        self.model.get_beauty_time(self, event)
 
     def get_events(self):
         return self.model.get_events()
