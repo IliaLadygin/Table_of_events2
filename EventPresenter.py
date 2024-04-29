@@ -7,10 +7,23 @@ class EventPresenter:
         self.model = model
 
     def add_event(self, event):
-        self.model.add(event)
+        print(self.model.add_new_event(event))
+
+    def get_event_via_tool_tip(self, tool_tip):
+        return self.model.get_event_via_tool_tip(tool_tip)
+
+    def get_event_to_str_via_tool_tip(self, tool_tip):
+        return self.model.get_event_to_str_via_tool_tip(tool_tip)
+
+    def get_event_to_str(self, event):
+        print('.')
+        return self.model.event_to_str(event)
 
     def delete_event_by_index(self, index):
         self.model.delete(index)
+
+    def delete_event(self, event):
+        self.model.del_event(event)
 
     def update_event_by_index(self, index, new_title, new_t_start, new_t_end):
         self.model.update(index, Event(new_title, new_t_start, new_t_end))

@@ -1,12 +1,19 @@
+from Event import EventFull
+
+
 class EventModel:
     def __init__(self, events):
         self.events = events
 
-    def add(self, event):
+    def add_new_event(self, event):
         self.events.append(event)
+        return "Event has been saved"
 
     def delete(self, index):
         del self.events[index]
+
+    def del_event(self, event):
+        self.events.remove(event)
 
     def update(self, index, new_event):
         self.events[index] = new_event
@@ -35,19 +42,20 @@ class EventModel:
             "12": "December"}
         beauty_date = ""
         if event.date_start == event.date_end:
-            beauty_date += str(int(event.date_start[7:])) + " " + months[event.date_start[5:7]]
+            beauty_date += str(int(event.date_start[8:10])) + " " + months[event.date_start[5:7]]
         else:
-            beauty_date += (str(int(event.date_start[7:])) + " " + months[event.date_start[5:7]] +
-                            " - " + str(int(event.date_end[7:])) + " " + months[event.date_end[5:7]])
+            beauty_date += (str(int(event.date_start[8:10])) + " " + months[event.date_start[5:7]] +
+                            " - " + str(int(event.date_end[8:10])) + " " + months[event.date_end[5:7]])
         return beauty_date
 
     @staticmethod
     def get_beauty_time(event):
-        return event.time_start[0:2] + ":" + event.time_start[2:] + "-" + event.time_end[0:2] + ":" + event.time_end[2:]
+        return event.time_start + " - " + event.time_end
 
     @staticmethod
     def get_event_as_dict(event):
         event_dict = {}
+        event_dict["ID"] = event.id
         event_dict["Название"] = event.title
         event_dict["Дата начала"] = event.date_start
         event_dict["Дата конца"] = event.date_end
@@ -60,3 +68,24 @@ class EventModel:
         if event.hyperlink:
             event_dict["Гиперссылка"] = event.hyperlink
         return event_dict
+
+    def get_event_via_tool_tip(self, tool_tip):
+        for event in self.events:
+            if event.id.lower() == tool_tip.lower():
+                # print(tool_tip)
+                # print(event.title)
+                return event
+
+    def event_to_str(self, event: EventFull):
+        print('..')
+        return (event.title + "\n" + self.get_beauty_date(event) + "\n" +
+                self.get_beauty_time(event) + ('', "\n" + event.place)[event.place != ''])
+
+    def get_event_to_str_via_tool_tip(self, tool_tip: str):
+        for event in self.events:
+            if event.id.lower() == tool_tip.lower():
+                # print(tool_tip)
+                # print(event.title)
+                return event.title + "\n" + self.get_beauty_date(event) + "\n" + self.get_beauty_time(event) + ('', "\n" + event.place)[event.place != '']
+        print("Error in get_event_via_tool_tip")
+        raise Exception("Error in get_event_via_tool_tip")
