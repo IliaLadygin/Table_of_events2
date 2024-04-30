@@ -5,17 +5,20 @@ class EventModel:
     def __init__(self, events):
         self.events = events
 
-    def add_new_event(self, event):
+    def add_new_event(self, event: EventFull):
         self.events.append(event)
         return "Event has been saved"
 
     def delete(self, index):
         del self.events[index]
 
-    def del_event(self, event):
+    def del_event(self, event: EventFull):
         self.events.remove(event)
 
-    def update(self, index, new_event):
+    def del_event_from_file(self, event: EventFull):
+        print("Deleting event from file (not worked)")
+
+    def update(self, index: int, new_event: EventFull):
         self.events[index] = new_event
 
     def get_events(self):
@@ -26,7 +29,7 @@ class EventModel:
                 " Time end = " + str(self.events[i].time_end)for i in range(len(self.events))]
 
     @staticmethod
-    def get_beauty_date(event):
+    def get_beauty_date(event: EventFull):
         months = {
             "01": "January",
             "02": "February",
@@ -40,20 +43,20 @@ class EventModel:
             "10": "October",
             "11": "November",
             "12": "December"}
-        beauty_date = ""
-        if event.date_start == event.date_end:
-            beauty_date += str(int(event.date_start[8:10])) + " " + months[event.date_start[5:7]]
+        ddMMyyyy_start = tuple(event.date_start.split('.'))
+        ddMMyyyy_end = tuple(event.date_end.split('.'))
+        if ddMMyyyy_start == ddMMyyyy_end:
+            beauty_date = str(int(ddMMyyyy_start[0])) + ' ' + months[ddMMyyyy_start[1]]
         else:
-            beauty_date += (str(int(event.date_start[8:10])) + " " + months[event.date_start[5:7]] +
-                            " - " + str(int(event.date_end[8:10])) + " " + months[event.date_end[5:7]])
+            beauty_date = str(int(ddMMyyyy_start[0])) + ' ' + months[ddMMyyyy_start[1]] + ' - ' + str(int(ddMMyyyy_end[0])) + ' ' + months[ddMMyyyy_end[1]]
         return beauty_date
 
     @staticmethod
-    def get_beauty_time(event):
+    def get_beauty_time(event: EventFull):
         return event.time_start + " - " + event.time_end
 
     @staticmethod
-    def get_event_as_dict(event):
+    def get_event_as_dict(event: EventFull):
         event_dict = {}
         event_dict["ID"] = event.id
         event_dict["Название"] = event.title
@@ -69,7 +72,7 @@ class EventModel:
             event_dict["Гиперссылка"] = event.hyperlink
         return event_dict
 
-    def get_event_via_tool_tip(self, tool_tip):
+    def get_event_via_tool_tip(self, tool_tip: str):
         for event in self.events:
             if event.id.lower() == tool_tip.lower():
                 # print(tool_tip)
@@ -77,9 +80,7 @@ class EventModel:
                 return event
 
     def event_to_str(self, event: EventFull):
-        print('..')
-        return (event.title + "\n" + self.get_beauty_date(event) + "\n" +
-                self.get_beauty_time(event) + ('', "\n" + event.place)[event.place != ''])
+        return event.title + "\n" + self.get_beauty_date(event) + "\n" + self.get_beauty_time(event) + ('', "\n" + event.place)[event.place != '']
 
     def get_event_to_str_via_tool_tip(self, tool_tip: str):
         for event in self.events:
@@ -89,3 +90,9 @@ class EventModel:
                 return event.title + "\n" + self.get_beauty_date(event) + "\n" + self.get_beauty_time(event) + ('', "\n" + event.place)[event.place != '']
         print("Error in get_event_via_tool_tip")
         raise Exception("Error in get_event_via_tool_tip")
+
+    def save_event_to_file(self, event: EventFull):
+        print("Saving event to file... (not worked)")
+
+    def edit_event_to_file(self, event: EventFull):
+        print("Editing event to file... (not worked)")

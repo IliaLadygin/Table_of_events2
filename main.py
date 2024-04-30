@@ -15,15 +15,15 @@ from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QVBoxL
 
 # Создаем несколько заметок
 # Добавить чтение событий из файла
-events = [EventFull("123","Event 1", "2023.04.04", "2023.04.04", "13:00", "14:00", note="This is just a note"),
-          EventFull("124", "Event 2", "2023.04.05", "2023.04.07", "12:00", "14:00", note="This is", place="Wth")]
+events = [EventFull("123","Event 1", "04.04.2023", "04.04.2023", "13:00", "14:00", note="This is just a note"),
+          EventFull("124", "Event 2", "05.04.2023", "07.04.2023", "12:00", "14:00", note="This is", place="Wth")]
 # Создаем модель заметок
 event_model = EventModel(events)
 # Создаем Presenter для заметок и связываем его с View и Model
 event_presenter = EventPresenter(EventView(EventPresenter), event_model)
 # print(event_presenter.model.get_events())
 # Добавляем новую заметку
-event_presenter.add_event(EventFull("125", "Event 3", "2023.02.04", "2023.06.04", "11:00", "16:00", hyperlink="www.google.com"))
+event_presenter.add_event(EventFull("125", "Event 3", "04.02.2023", "06.04.2023", "11:00", "16:00", hyperlink="www.google.com"))
 # print(*event_presenter.model.get_events(), sep="\n")
 # Удаляем заметку
 # event_presenter.delete_event_by_index(0)

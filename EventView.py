@@ -39,6 +39,8 @@ class MainWindow(QMainWindow):
         # Виджет полного списка событий
         self.list_events = QListWidget()
 
+        self.list_events.setMouseTracking(False)
+        self.list_events.setSortingEnabled(True)
         for event in event_presenter.model.events:
             event_str = event_presenter.get_event_to_str_via_tool_tip(event.id)
             self.item = QListWidgetItem()
@@ -46,7 +48,7 @@ class MainWindow(QMainWindow):
             self.item.setToolTip(event.id)
             self.list_events.addItem(self.item)
         self.current_event_in_list = self.list_events.currentItem()
-
+        self.list_events.setCurrentRow(0)
         # Создание контекстного меню
         # self.ctx_list_events = QMenu()
         # # Создание действий контекстного меню
@@ -66,6 +68,7 @@ class MainWindow(QMainWindow):
 
         # Кнопка редактирования события
         self.button_edit_event = QPushButton("Редактировать событие")
+        self.button_edit_event.setMinimumWidth(145)
         self.button_edit_event.setCheckable(True)
         self.button_edit_is_checked = False
         self.button_edit_event.setChecked(self.button_edit_is_checked)
@@ -172,8 +175,8 @@ class MainWindow(QMainWindow):
         # print(self.list_events.item())
         event = self.event_presenter.get_event_via_tool_tip(self.list_events.currentItem().toolTip())
         self.title_line.setText(event.title)
-        self.date_start_line.setDate(QDate.fromString(event.date_start, "yyyy.MM.dd"))
-        self.date_end_line.setDate(QDate.fromString(event.date_end, "yyyy.MM.dd"))
+        self.date_start_line.setDate(QDate.fromString(event.date_start, "dd.MM.yyyy"))
+        self.date_end_line.setDate(QDate.fromString(event.date_end, "dd.MM.yyyy"))
         self.time_start_line.setTime(QTime.fromString(event.time_start))
         self.time_end_line.setTime(QTime.fromString(event.time_end))
         self.note_line.setText(event.note)
@@ -182,48 +185,50 @@ class MainWindow(QMainWindow):
         # self.event_full_view.setText(str(self.list_events.currentRow()))
         pass
 
-    # def mousePressEvent(self, a0):
-    #     print(self.current_event_in_list)
-
     # Триггер нажатия кнопки edit
     def the_edit_button_was_toggled(self):
         self.button_edit_is_checked = self.button_edit_event.isChecked()
         if self.button_edit_is_checked:
-            # Старый вариант
-            # self.list_events.openPersistentEditor(self.list_events.currentItem())
-            # self.list_events.editItem(self.list_events.currentItem())
-            # Новый вариант
             self.button_edit_event.setText("Сохранить изменения")
+            self.list_events.setEnabled(False)
             for widget in self.line_widget_tuple:
                 widget.setEnabled(True)
         else:
-            # Старый вариант
-            # self.list_events.closePersistentEditor(self.list_events.currentItem())
-            # Новый вариант
             for widget in self.line_widget_tuple:
                 widget.setEnabled(False)
             self.button_edit_event.setText("Редактировать событие")
+            self.list_events.setEnabled(True)
             current_item = self.list_events.currentItem()
             event_to_delete = self.event_presenter.get_event_via_tool_tip(current_item.toolTip())
-            # print(self.event_presenter.get_event_to_str(event_to_delete))
             self.event_presenter.delete_event(event_to_delete)
-            print(self.date_start_line.textFromDateTime(self.date_start_line.dateTime()))
-            print(self.time_end_line.textFromDateTime(self.time_start_line.dateTime()))
-            print(self.note_line.text())
             event = EventFull(current_item.toolTip(), self.title_line.text(),
                               self.date_start_line.textFromDateTime(self.date_start_line.dateTime()), self.date_end_line.textFromDateTime(self.date_end_line.dateTime()),
                               self.time_start_line.textFromDateTime(self.time_start_line.dateTime()), self.time_end_line.textFromDateTime(self.time_end_line.dateTime()),
                               note=self.note_line.text(), place=self.place_line.text(), hyperlink=self.hyperlink_line.text())
             self.event_presenter.add_event(event)
-            event.print()
             current_item.setText(self.event_presenter.get_event_to_str(event))
             # Сохранение новой информации в файл
-
+            self.event_presenter.save_new_event_to_file(event)
+            # self.info_view.setText('Изменения сохранены.')
 
     # Сигнал о нажатии Удалить событие
     def the_delete_button_was_clicked(self):
+        current_item = self.list_events.currentItem()
+        id = current_item.toolTip()
+        event = self.event_presenter.get_event_via_tool_tip(id)
         item_to_delete = self.list_events.takeItem(self.list_events.currentRow())
         # Сохранение изменений в файл
+        self.event_presenter.delete_event_from_file(event)
+        self.event_presenter.delete_event(event)
+        for widget in self.line_widget_tuple:
+            try:
+                widget.setText('')
+            except AttributeError:
+                widget.setTime(QTime(0, 0))
+                widget.setDate(QDate(2000, 1, 1))
+            except:
+                print("Error")
+        # print(self.event_presenter.get_events())
 
     # Сигнал о нажатии на событие ПКМ
     def show_ctx_menu_list_events(self, event):
