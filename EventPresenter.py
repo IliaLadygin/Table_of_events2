@@ -1,4 +1,5 @@
 from Event import Event, EventFull
+from PyQt6.QtCore import QDateTime
 
 
 class EventPresenter:
@@ -16,7 +17,7 @@ class EventPresenter:
         return self.model.get_event_to_str_via_tool_tip(tool_tip)
 
     def get_event_to_str(self, event: EventFull):
-        print('.')
+        # print('.')
         return self.model.event_to_str(event)
 
     def save_new_event_to_file(self, event: EventFull):
@@ -39,6 +40,9 @@ class EventPresenter:
 
     def get_beauty_event_date(self, event: EventFull):
         self.model.get_beauty_date(self, event)
+
+    def create_id(self, title: str, date: QDateTime, time: QDateTime):
+        return title + date.toString('yyyyMMdd') + time.toString('hhmmss')
 
     def get_beauty_event_time(self, event: EventFull):
         self.model.get_beauty_time(self, event)

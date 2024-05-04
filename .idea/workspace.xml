@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0640c365-1e7c-4d70-adb8-a52018d1712a" name="Changes" comment="GUI v0.4">
+    <list default="true" id="0640c365-1e7c-4d70-adb8-a52018d1712a" name="Changes" comment="GUI v0.5">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EventModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/EventModel.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EventPresenter.py" beforeDir="false" afterPath="$PROJECT_DIR$/EventPresenter.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/EventView.py" beforeDir="false" afterPath="$PROJECT_DIR$/EventView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -192,7 +190,8 @@
       <workItem from="1714308719743" duration="7874000" />
       <workItem from="1714378458855" duration="9966000" />
       <workItem from="1714458707771" duration="1644000" />
-      <workItem from="1714475551637" duration="6710000" />
+      <workItem from="1714475551637" duration="6729000" />
+      <workItem from="1714797376425" duration="3397000" />
     </task>
     <task id="LOCAL-00001" summary="Initial point">
       <option name="closed" value="true" />
@@ -234,7 +233,15 @@
       <option name="project" value="LOCAL" />
       <updated>1714388987621</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="GUI v0.5">
+      <option name="closed" value="true" />
+      <created>1714482292278</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1714482292279</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -257,12 +264,13 @@
     <MESSAGE value="GUI v0.1" />
     <MESSAGE value="GUI v0.2" />
     <MESSAGE value="GUI v0.4" />
-    <option name="LAST_COMMIT_MESSAGE" value="GUI v0.4" />
+    <MESSAGE value="GUI v0.5" />
+    <option name="LAST_COMMIT_MESSAGE" value="GUI v0.5" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Table_of_events2$EventView.coverage" NAME="EventView Coverage Results" MODIFIED="1714385175420" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Table_of_events2$PyQtExamples.coverage" NAME="PyQtExamples Coverage Results" MODIFIED="1714316076828" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/.venv" />
     <SUITE FILE_PATH="coverage/Table_of_events2$EventPresenter.coverage" NAME="EventPresenter Coverage Results" MODIFIED="1712748767480" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/.venv/Lib/my_package" />
-    <SUITE FILE_PATH="coverage/Table_of_events2$main.coverage" NAME="main Coverage Results" MODIFIED="1714482081283" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Table_of_events2$main.coverage" NAME="main Coverage Results" MODIFIED="1714800553067" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
