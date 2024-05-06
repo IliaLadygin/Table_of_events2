@@ -50,18 +50,7 @@ class MainWindow(QMainWindow):
             self.list_events.addItem(self.item)
         self.current_event_in_list = self.list_events.currentItem()
         self.list_events.setCurrentItem(self.item)
-        # Создание контекстного меню
-        # self.ctx_list_events = QMenu()
-        # # Создание действий контекстного меню
-        # action_edit = self.ctx_list_events.addAction("Изменить событие")
-        # action_delete = self.ctx_list_events.addAction("Удалить событие")
-        # # Привязка действий к методам
-        # action_edit.triggered.connect(self.action_edit_is_triggered)
-        # action_delete.triggered.connect(self.action_delete_is_triggered)
-
-        # Создание контекстного меню 2
-        # self.list_events.setContextMenuPolicy(Qt.CustomContextMenu)
-        # self.list_events.customContextMenuRequested.connect(self.show_ctx_menu_list_events)
+        self.list_events.itemClicked.connect(self.current_item_was_changed)
 
         # Кнопка добавления события
         self.button_add_event = QPushButton("Добавить событие")
@@ -89,7 +78,11 @@ class MainWindow(QMainWindow):
         # Второй слой
         # Реализация календаря
         self.calendar = QCalendarWidget()
-        self.calendar.setFixedSize(QSize(200, 200))
+        self.calendar.setMaximumHeight(200)
+        self.calendar.setGridVisible(True)
+        # print(self.calendar.calendar())
+        self.calendar.selectionChanged.connect(self.calendar_day_changed)
+        self.calendar.showSelectedDate()
 
         # Показ полной информации о событии
         self.container_full_view_right = QVBoxLayout()
@@ -99,16 +92,15 @@ class MainWindow(QMainWindow):
                           "Дата конца": QDateEdit,
                           "Время начала": QTimeEdit,
                           "Время конца": QTimeEdit,
-                          "Описание": QLineEdit,
                           "Место": QLineEdit,
-                          "Гиперссылка": QLineEdit}
+                          "Гиперссылка": QLineEdit,
+                          "Описание": QTextEdit}
 
         for name, widget in self.list_info.items():
-            # self.container_full_view_right.addWidget(widget())
-            self.container_full_view_left.addWidget(QLabel(name))
+            if name.lower() != 'описание':
+                self.container_full_view_left.addWidget(QLabel(name))
         # Позор моим навыкам
-        self.title_line, self.date_start_line, self.date_end_line, self.time_start_line, self.time_end_line, self.note_line, self.place_line, self.hyperlink_line = tuple([widget()for widget in self.list_info.values()])
-        self.title_line.setEnabled(False)
+        self.title_line, self.date_start_line, self.date_end_line, self.time_start_line, self.time_end_line, self.place_line, self.hyperlink_line, self.note_line = tuple([widget() for widget in self.list_info.values()])
         self.line_widget_tuple = (self.title_line,
                                  self.date_end_line, self.date_start_line,
                                  self.time_start_line, self.time_end_line,
@@ -121,31 +113,24 @@ class MainWindow(QMainWindow):
         self.container_full_view_right.addWidget(self.date_end_line)
         self.container_full_view_right.addWidget(self.time_start_line)
         self.container_full_view_right.addWidget(self.time_end_line)
-        self.container_full_view_right.addWidget(self.note_line)
         self.container_full_view_right.addWidget(self.place_line)
         self.container_full_view_right.addWidget(self.hyperlink_line)
         self.container_full_view = QHBoxLayout()
+        self.container_note_view = QHBoxLayout()
+        label_note = QLabel('Описание')
+        label_note.setMinimumWidth(77)
+        self.container_note_view.addWidget(label_note, alignment=Qt.AlignmentFlag.AlignLeft.AlignTop)
+        self.container_note_view.addWidget(self.note_line)
         self.container_full_view.addLayout(self.container_full_view_left)
         self.container_full_view.addLayout(self.container_full_view_right)
-
-        self.list_events.itemClicked.connect(self.current_item_was_changed)
+        self.container_full_view_final = QVBoxLayout()
+        self.container_full_view_final.addLayout(self.container_full_view)
+        self.container_full_view_final.addLayout(self.container_note_view)
 
         # Информатор (пока не знаю, буду ли делать)
         self.info_view = QLabel()
 
-        # self.input = QLineEdit()  # Создание строки, в которую можно вводить данные
-        # self.input.textChanged.connect(self.label.setText)  # textChanged - сигнал редактирования строки
-
         # Добавление слоёв в которых располагаются виджеты
-        # Попытка 1
-        # layout_add = QGridLayout()
-        # layout_add.addWidget(self.list_events, 0, 0, 0, 1, 1, 0, 1, 1)
-        # layout_add.addWidget(self.calendar, 2, 0)
-        # layout_add.addWidget(self.button_add_event, 0, 3, 1, 3)
-        # layout_add.addWidget(self.info_view, 2, 1)
-        # layout_add.addWidget(self.info_view, 3, 3)
-
-        # Попытка 2
         layout_main = QHBoxLayout()
         layout0 = QVBoxLayout()
         layout0.addWidget(self.list_events)
@@ -156,15 +141,14 @@ class MainWindow(QMainWindow):
         layout0.addLayout(layout0_123)
         layout_main.addLayout(layout0)
         layout1 = QVBoxLayout()
-        layout1.addWidget(self.calendar)
-        layout1.addLayout(self.container_full_view)
+        layout1.addWidget(self.calendar, alignment=Qt.AlignmentFlag.AlignCenter)
+        layout1.addLayout(self.container_full_view_final)
         layout1.addWidget(self.info_view)
         layout_main.addLayout(layout1)
 
         # Макет
         container = QWidget()
         container.setLayout(layout_main)
-        # self.setMouseTracking(True) # должна обрабатывать движение мыши без нажатия, но не работает
 
         # Устанавливаем центральный виджет Window.
         self.setCentralWidget(container)
@@ -191,7 +175,7 @@ class MainWindow(QMainWindow):
             self.list_events.setEnabled(False)
             self.button_edit_event.setEnabled(False)
             self.button_delete_event.setEnabled(False)
-            self.info_view.setText('Заполните строки выше')
+            self.info_view.setText('Заполните строки выше.')
             self.button_add_event.setText('Сохранить событие')
         else:
             self.list_events.setEnabled(True)
@@ -203,7 +187,7 @@ class MainWindow(QMainWindow):
             event = EventFull(id, self.title_line.text(),
                               self.date_start_line.textFromDateTime(self.date_start_line.dateTime()), self.date_end_line.textFromDateTime(self.date_end_line.dateTime()),
                               self.time_start_line.textFromDateTime(self.time_start_line.dateTime()), self.time_end_line.textFromDateTime(self.time_end_line.dateTime()),
-                              note=self.note_line.text(), place=self.place_line.text(), hyperlink=self.hyperlink_line.text())
+                              note=self.note_line.document().toRawText(), place=self.place_line.text(), hyperlink=self.hyperlink_line.text())
             self.event_presenter.add_event(event)
             event_str = self.event_presenter.get_event_to_str(event)
             self.item = QListWidgetItem()
@@ -214,7 +198,7 @@ class MainWindow(QMainWindow):
             # Сохранение новой информации в файл
             self.event_presenter.save_new_event_to_file(event)
             self.button_add_event.setText('Добавить событие')
-            self.info_view.setText('Событие добавлено')
+            self.info_view.setText('Событие добавлено.')
 
     # Сигнал об изменении текущего элемента в списке событий
     def current_item_was_changed(self):
@@ -230,8 +214,8 @@ class MainWindow(QMainWindow):
         self.note_line.setText(event.note)
         self.place_line.setText(event.place)
         self.hyperlink_line.setText(event.hyperlink)
+        self.info_view.setText('')
         # self.event_full_view.setText(str(self.list_events.currentRow()))
-        pass
 
     # Триггер нажатия кнопки edit
     def the_edit_button_was_toggled(self):
@@ -239,6 +223,9 @@ class MainWindow(QMainWindow):
         if self.button_edit_is_checked:
             self.button_edit_event.setText("Сохранить изменения")
             self.list_events.setEnabled(False)
+            self.list_events.setEnabled(False)
+            self.button_add_event.setEnabled(False)
+            self.button_delete_event.setEnabled(False)
             for widget in self.line_widget_tuple:
                 widget.setEnabled(True)
         else:
@@ -246,18 +233,21 @@ class MainWindow(QMainWindow):
                 widget.setEnabled(False)
             self.button_edit_event.setText("Редактировать событие")
             self.list_events.setEnabled(True)
+            self.button_add_event.setEnabled(True)
+            self.button_delete_event.setEnabled(True)
+            self.list_events.setEnabled(True)
             current_item = self.list_events.currentItem()
             event_to_delete = self.event_presenter.get_event_via_tool_tip(current_item.toolTip())
             self.event_presenter.delete_event(event_to_delete)
             event = EventFull(current_item.toolTip(), self.title_line.text(),
                               self.date_start_line.textFromDateTime(self.date_start_line.dateTime()), self.date_end_line.textFromDateTime(self.date_end_line.dateTime()),
                               self.time_start_line.textFromDateTime(self.time_start_line.dateTime()), self.time_end_line.textFromDateTime(self.time_end_line.dateTime()),
-                              note=self.note_line.text(), place=self.place_line.text(), hyperlink=self.hyperlink_line.text())
+                              note=self.note_line.document().toRawText(), place=self.place_line.text(), hyperlink=self.hyperlink_line.text())
             self.event_presenter.add_event(event)
             current_item.setText(self.event_presenter.get_event_to_str(event))
             # Сохранение новой информации в файл
             self.event_presenter.save_new_event_to_file(event)
-            # self.info_view.setText('Изменения сохранены.')
+            self.info_view.setText('Изменения сохранены.')
 
     # Сигнал о нажатии Удалить событие
     def the_delete_button_was_clicked(self):
@@ -270,6 +260,7 @@ class MainWindow(QMainWindow):
         self.event_presenter.delete_event(event)
         self.clear_tuple_lines()
         # print(self.event_presenter.get_events())
+        self.info_view.setText('Событие удалено.')
 
     # Сигнал о нажатии на событие ПКМ
     def show_ctx_menu_list_events(self, event):
@@ -278,28 +269,25 @@ class MainWindow(QMainWindow):
         menu.addAction(QAction("Удалить событие", self))
         menu.exec(event.globalPos())
 
-    # Методы контексного меню
-    def action_edit_is_triggered(self):
-        pass
+    def calendar_day_changed(self):
+        events = self.event_presenter.get_events_via_qdate(self.calendar.selectedDate())
+        # print(self.calendar.selectedDate())
+        # self.calendar.showSelectedDate()
+        # print(events)
+        self.fill_list_events_with(events)
 
-    def action_delete_is_triggered(self):
-        pass
-    # Перехват контексного меню
-    # def contextMenuEvent(self, e):
-    #     context = QMenu(self)
-    #     context.addAction(QAction("test 1", self))
-    #     context.addAction(QAction("test 2", self))
-    #     context.addAction(QAction("test 3", self))
-    #     context.exec(e.globalPos())
-
-    # Вмешательство с целью добавить новую операцию, но продолжение после
-    # Почему-то не работает так как планируется. Просто добавляет операцию
-    # def mousePressEvent(self, event):
-    #     print("Mouse pressed!")
-        # super(self, MainWindow).contextMenuEvent(event)
-        # super().contextMenuEvent(event)
-        # super().mousePressEvent(event)
-
+    def fill_list_events_with(self, events):
+        if events:
+            self.info_view.setText('Загружены новые события.')
+            self.list_events.clear()
+            for event in events:
+                event_str = self.event_presenter.get_event_to_str_via_tool_tip(event.id)
+                self.item = QListWidgetItem()
+                self.item.setText(event_str.strip())
+                self.item.setToolTip(event.id)
+                self.list_events.addItem(self.item)
+        else:
+            self.info_view.setText('Событий на этот день не найдено.')
 
 class EventView:
     @staticmethod

@@ -28,6 +28,10 @@ class EventModel:
                 ": Time start = " + str(self.events[i].time_start) +
                 " Time end = " + str(self.events[i].time_end)for i in range(len(self.events))]
 
+    def get_all_events_as_list(self):
+        # print(list(self.events))
+        return self.events
+
     @staticmethod
     def get_beauty_date(event: EventFull):
         months = {

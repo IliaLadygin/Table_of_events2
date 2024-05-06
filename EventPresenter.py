@@ -1,8 +1,10 @@
 from Event import Event, EventFull
-from PyQt6.QtCore import QDateTime
+from PyQt6.QtCore import QDateTime, QDate
 
 
 class EventPresenter:
+    date_format = 'dd.MM.yyyy'
+
     def __init__(self, view, model):
         self.view = view
         self.model = model
@@ -52,3 +54,15 @@ class EventPresenter:
 
     def get_event_as_dict(self, event: EventFull):
         return self.model.get_event_as_dict(event)
+
+    def get_events_via_qdate(self, date: QDate):
+        events = self.model.get_all_events_as_list()
+        events_to_return = []
+        for event in events:
+            # print(event.title)
+            # print(date)
+            # print(date.toString(self.date_format))
+            # print(event.date_start, date.toString(self.date_format), event.date_end)
+            if event.date_start <= date.toString(self.date_format) <= event.date_end:
+                events_to_return.append(event)
+        return events_to_return
