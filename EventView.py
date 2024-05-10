@@ -33,7 +33,8 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Table of events") # Название окна
 
         self.event_presenter = event_presenter
-
+        # Флаг об возможности редакта.
+        self.editing_enabled = False
         # Виджеты (слева направо, сверху вниз)
         # Первый слой
         # Виджет полного списка событий
@@ -154,51 +155,70 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(container)
 
     # Удаление информации в строках
-    def clear_tuple_lines(self):
-        for widget in self.line_widget_tuple:
-            try:
-                widget.setText('')
-            except AttributeError:
-                widget.setTime(QTime(0, 0))
-                widget.setDate(QDate(2000, 1, 1))
-            except:
-                print("Error")
+    def clear_tuple_lines(self, is_now_editing=False):
+        print(is_now_editing)
+        if not is_now_editing:
+            for widget in self.line_widget_tuple:
+                try:
+                    widget.setText('')
+                except AttributeError:
+                    widget.setTime(QTime(0, 0))
+                    widget.setDate(QDate.currentDate())
+                except:
+                    print("Error")
 
     # Сигнал о нажатии Добавить событие
     def the_add_button_was_toggled(self):
         self.button_add_is_checked = self.button_add_event.isChecked()
         # print(self.button_add_is_checked)
         if self.button_add_is_checked:
+            self.calendar.showToday()
+            self.calendar.setSelectedDate(QDate.currentDate())
+            print(self.title_line.isEnabled())
+            self.clear_tuple_lines(is_now_editing=self.title_line.isEnabled())
             for widget in self.line_widget_tuple:
                 widget.setEnabled(True)
-            self.clear_tuple_lines()
             self.list_events.setEnabled(False)
             self.button_edit_event.setEnabled(False)
             self.button_delete_event.setEnabled(False)
-            self.info_view.setText('Заполните строки выше.')
+            # self.info_view.setText('Заполните строки выше.')
             self.button_add_event.setText('Сохранить событие')
         else:
-            self.list_events.setEnabled(True)
-            self.button_edit_event.setEnabled(True)
-            self.button_delete_event.setEnabled(True)
-            for widget in self.line_widget_tuple:
-                widget.setEnabled(False)
-            id = self.event_presenter.create_id(self.title_line.text(), self.date_start_line.date(), self.time_start_line.time())
-            event = EventFull(id, self.title_line.text(),
-                              self.date_start_line.textFromDateTime(self.date_start_line.dateTime()), self.date_end_line.textFromDateTime(self.date_end_line.dateTime()),
-                              self.time_start_line.textFromDateTime(self.time_start_line.dateTime()), self.time_end_line.textFromDateTime(self.time_end_line.dateTime()),
-                              note=self.note_line.document().toRawText(), place=self.place_line.text(), hyperlink=self.hyperlink_line.text())
-            self.event_presenter.add_event(event)
-            event_str = self.event_presenter.get_event_to_str(event)
-            self.item = QListWidgetItem()
-            self.item.setText(event_str.strip())
-            self.item.setToolTip(event.id)
-            self.list_events.addItem(self.item)
-            # current_item.setText(self.event_presenter.get_event_to_str(event))
-            # Сохранение новой информации в файл
-            self.event_presenter.save_new_event_to_file(event)
-            self.button_add_event.setText('Добавить событие')
-            self.info_view.setText('Событие добавлено.')
+            if not self.title_line.text():
+                self.info_view.setText('Событие должно иметь название!')
+                self.button_add_event.setChecked(True)
+            elif not self.event_presenter.is_dates_valid(self.date_start_line.date(), self.date_end_line.date(),
+                                                         self.time_start_line.time(), self.time_end_line.time()):
+                self.info_view.setText('Некорректные даты и/или время события.')
+                self.button_add_event.setChecked(True)
+            else:
+                self.list_events.setEnabled(True)
+                self.button_edit_event.setEnabled(True)
+                self.button_delete_event.setEnabled(True)
+                for widget in self.line_widget_tuple:
+                    widget.setEnabled(False)
+                id = self.event_presenter.create_id(self.title_line.text(), self.date_start_line.date(),
+                                                    self.time_start_line.time())
+                event = EventFull(id, self.title_line.text(),
+                                  self.date_start_line.textFromDateTime(self.date_start_line.dateTime()),
+                                  self.date_end_line.textFromDateTime(self.date_end_line.dateTime()),
+                                  self.time_start_line.textFromDateTime(self.time_start_line.dateTime()),
+                                  self.time_end_line.textFromDateTime(self.time_end_line.dateTime()),
+                                  note=self.note_line.document().toRawText(), place=self.place_line.text(),
+                                  hyperlink=self.hyperlink_line.text())
+                self.event_presenter.add_event(event)
+                event_str = self.event_presenter.get_event_to_str(event)
+                self.item = QListWidgetItem()
+                self.item.setText(event_str.strip())
+                self.item.setToolTip(event.id)
+                self.list_events.addItem(self.item)
+                # current_item.setText(self.event_presenter.get_event_to_str(event))
+                # Сохранение новой информации в файл
+                self.event_presenter.save_new_event_to_file(event)
+                self.button_add_event.setText('Добавить событие')
+                self.info_view.setText('Событие добавлено.')
+        self.editing_enabled = self.title_line.isEnabled()
+
 
     # Сигнал об изменении текущего элемента в списке событий
     def current_item_was_changed(self):
@@ -207,8 +227,8 @@ class MainWindow(QMainWindow):
         # print(self.list_events.item())
         event = self.event_presenter.get_event_via_tool_tip(self.list_events.currentItem().toolTip())
         self.title_line.setText(event.title)
-        self.date_start_line.setDate(QDate.fromString(event.date_start, "dd.MM.yyyy"))
-        self.date_end_line.setDate(QDate.fromString(event.date_end, "dd.MM.yyyy"))
+        self.date_start_line.setDate(QDate.fromString(event.date_start, self.event_presenter.date_format))
+        self.date_end_line.setDate(QDate.fromString(event.date_end, self.event_presenter.date_format))
         self.time_start_line.setTime(QTime.fromString(event.time_start))
         self.time_end_line.setTime(QTime.fromString(event.time_end))
         self.note_line.setText(event.note)
@@ -229,25 +249,34 @@ class MainWindow(QMainWindow):
             for widget in self.line_widget_tuple:
                 widget.setEnabled(True)
         else:
-            for widget in self.line_widget_tuple:
-                widget.setEnabled(False)
-            self.button_edit_event.setText("Редактировать событие")
-            self.list_events.setEnabled(True)
-            self.button_add_event.setEnabled(True)
-            self.button_delete_event.setEnabled(True)
-            self.list_events.setEnabled(True)
-            current_item = self.list_events.currentItem()
-            event_to_delete = self.event_presenter.get_event_via_tool_tip(current_item.toolTip())
-            self.event_presenter.delete_event(event_to_delete)
-            event = EventFull(current_item.toolTip(), self.title_line.text(),
-                              self.date_start_line.textFromDateTime(self.date_start_line.dateTime()), self.date_end_line.textFromDateTime(self.date_end_line.dateTime()),
-                              self.time_start_line.textFromDateTime(self.time_start_line.dateTime()), self.time_end_line.textFromDateTime(self.time_end_line.dateTime()),
-                              note=self.note_line.document().toRawText(), place=self.place_line.text(), hyperlink=self.hyperlink_line.text())
-            self.event_presenter.add_event(event)
-            current_item.setText(self.event_presenter.get_event_to_str(event))
-            # Сохранение новой информации в файл
-            self.event_presenter.save_new_event_to_file(event)
-            self.info_view.setText('Изменения сохранены.')
+            if not self.title_line.text():
+                self.info_view.setText('Событие должно иметь название!')
+                self.button_edit_event.setChecked(True)
+            elif not self.event_presenter.is_dates_valid(self.date_start_line.date(), self.date_end_line.date(),
+                                                         self.time_start_line.time(), self.time_end_line.time()):
+                self.info_view.setText('Некорректные даты и/или время события.')
+                self.button_edit_event.setChecked(True)
+            else:
+                for widget in self.line_widget_tuple:
+                    widget.setEnabled(False)
+                self.button_edit_event.setText("Редактировать событие")
+                self.list_events.setEnabled(True)
+                self.button_add_event.setEnabled(True)
+                self.button_delete_event.setEnabled(True)
+                self.list_events.setEnabled(True)
+                current_item = self.list_events.currentItem()
+                event_to_delete = self.event_presenter.get_event_via_tool_tip(current_item.toolTip())
+                self.event_presenter.delete_event(event_to_delete)
+                event = EventFull(current_item.toolTip(), self.title_line.text(),
+                                  self.date_start_line.textFromDateTime(self.date_start_line.dateTime()), self.date_end_line.textFromDateTime(self.date_end_line.dateTime()),
+                                  self.time_start_line.textFromDateTime(self.time_start_line.dateTime()), self.time_end_line.textFromDateTime(self.time_end_line.dateTime()),
+                                  note=self.note_line.document().toRawText(), place=self.place_line.text(), hyperlink=self.hyperlink_line.text())
+                self.event_presenter.add_event(event)
+                current_item.setText(self.event_presenter.get_event_to_str(event))
+                # Сохранение новой информации в файл
+                self.event_presenter.save_new_event_to_file(event)
+                self.info_view.setText('Изменения сохранены.')
+        self.editing_enabled = self.title_line.isEnabled()
 
     # Сигнал о нажатии Удалить событие
     def the_delete_button_was_clicked(self):
@@ -270,11 +299,15 @@ class MainWindow(QMainWindow):
         menu.exec(event.globalPos())
 
     def calendar_day_changed(self):
-        events = self.event_presenter.get_events_via_qdate(self.calendar.selectedDate())
-        # print(self.calendar.selectedDate())
-        # self.calendar.showSelectedDate()
-        # print(events)
-        self.fill_list_events_with(events)
+        if self.editing_enabled:
+            self.date_start_line.setDate(self.calendar.selectedDate())
+            self.date_end_line.setDate(self.calendar.selectedDate())
+        else:
+            events = self.event_presenter.get_events_via_qdate(self.calendar.selectedDate())
+            # print(self.calendar.selectedDate())
+            # self.calendar.showSelectedDate()
+            # print(events)
+            self.fill_list_events_with(events)
 
     def fill_list_events_with(self, events):
         if events:

@@ -66,3 +66,7 @@ class EventPresenter:
             if event.date_start <= date.toString(self.date_format) <= event.date_end:
                 events_to_return.append(event)
         return events_to_return
+
+    def is_dates_valid(self, date_start: QDate, date_end: QDate, time_start: QDate, time_end: QDate) -> bool:
+        print(date_start.toString('yyyyMMdd') + time_start.toString('hhmm'), date_end.toString('yyyyMMdd') + time_end.toString('hhmm'))
+        return date_start.toString('yyyyMMdd') + time_start.toString('hhmm') <= date_end.toString('yyyyMMdd') + time_end.toString('hhmm')
