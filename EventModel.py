@@ -105,7 +105,7 @@ class EventModel:
         # print("Editing event to file... (not worked)")
         
     def import_calendar(self, path):
-        if os.path.exists(path) and os.path.splitext(path)[-1].lower() == ".ics":
+        if os.path.exists(path) and path.endswith('.ics'):
             g = open(path,'rb')
             try:
                 gcal = icalendar.Calendar.from_ical(g.read())
