@@ -214,7 +214,7 @@ class MainWindow(QMainWindow):
                 self.list_events.addItem(self.item)
                 # current_item.setText(self.event_presenter.get_event_to_str(event))
                 # Сохранение новой информации в файл
-                self.event_presenter.save_new_event_to_file(event)
+                # self.event_presenter.save_new_event_to_file(event)
                 self.button_add_event.setText('Добавить событие')
                 self.info_view.setText('Событие добавлено.')
         self.editing_enabled = self.title_line.isEnabled()
@@ -274,7 +274,7 @@ class MainWindow(QMainWindow):
                 self.event_presenter.add_event(event)
                 current_item.setText(self.event_presenter.get_event_to_str(event))
                 # Сохранение новой информации в файл
-                self.event_presenter.save_new_event_to_file(event)
+                # self.event_presenter.save_new_event_to_file(event)
                 self.info_view.setText('Изменения сохранены.')
         self.editing_enabled = self.title_line.isEnabled()
 
@@ -285,7 +285,7 @@ class MainWindow(QMainWindow):
         event = self.event_presenter.get_event_via_tool_tip(id)
         item_to_delete = self.list_events.takeItem(self.list_events.currentRow())
         # Сохранение изменений в файл
-        self.event_presenter.delete_event_from_file(event)
+        # self.event_presenter.delete_event_from_file(event)
         self.event_presenter.delete_event(event)
         self.clear_tuple_lines()
         # print(self.event_presenter.get_events())

@@ -1,5 +1,6 @@
 from Event import Event, EventFull
 from PyQt6.QtCore import QDateTime, QDate
+import icalendar
 
 
 class EventPresenter:
@@ -22,14 +23,14 @@ class EventPresenter:
         # print('.')
         return self.model.event_to_str(event)
 
-    def save_new_event_to_file(self, event: EventFull):
-        return self.model.save_event_to_file(event)
+    # def save_new_event_to_file(self, event: EventFull):
+        # return self.model.save_event_to_file(event)
 
-    def delete_event_from_file(self, event: EventFull):
-        return self.model.del_event_from_file(event)
+    # def delete_event_from_file(self, event: EventFull):
+        # return self.model.del_event_from_file(event)
 
-    def edit_event_in_file(self, event: EventFull):
-        return self.model.edit_event_to_file(event)
+    # def edit_event_in_file(self, event: EventFull):
+        # return self.model.edit_event_to_file(event)
 
     def delete_event_by_index(self, index):
         self.model.delete(index)
@@ -70,3 +71,15 @@ class EventPresenter:
     def is_dates_valid(self, date_start: QDate, date_end: QDate, time_start: QDate, time_end: QDate) -> bool:
         print(date_start.toString('yyyyMMdd') + time_start.toString('hhmm'), date_end.toString('yyyyMMdd') + time_end.toString('hhmm'))
         return date_start.toString('yyyyMMdd') + time_start.toString('hhmm') <= date_end.toString('yyyyMMdd') + time_end.toString('hhmm')
+
+    def import_calendar(self, path: str):
+        self.model.import_calendar(path)
+        
+    def export_calendar(self, path: str):
+        self.model.export_calendar(path)
+    
+    def add_event_in_calendar_file(self, event: EventFull, cal: icalendar.Calendar):
+        self.model.add_event_in_calendar(event, cal)
+        
+    def first_note(self, path: str):
+        self.model.first_note(path)
