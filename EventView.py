@@ -1,6 +1,8 @@
 import sys
 # from PyQt6 import Cont
 # from PySide6.QtCore import
+from pathlib import Path
+import os
 from Event import EventFull
 from PyQt6.QtCore import QTime, QDate, QDateTime
 from PyQt6.QtCore import Qt, QSize
@@ -20,7 +22,8 @@ from PyQt6.QtWidgets import (QApplication,
                              QTextEdit,
                              QListWidgetItem,
                              QDateEdit,
-                             QTimeEdit)
+                             QTimeEdit,
+                             QFileDialog)
 
 
 class MainWindow(QMainWindow):
@@ -75,6 +78,21 @@ class MainWindow(QMainWindow):
         # self.button_delete_event.setCheckable(True)
         # self.button_delete_is_checked = False
         # self.button_delete_event.setChecked(self.button_delete_is_checked)
+
+        # Кнопка показа всех событий
+        self.button_all_events = QPushButton("Показать всё")
+        self.button_all_events.clicked.connect(self.the_all_events_button_was_clicked)
+        self.button_all_events.setCheckable(False)
+
+        # Кнопка импорта событий
+        self.button_import = QPushButton("Импорт")
+        self.button_import.clicked.connect(self.the_import_button_was_clicked)
+        self.button_import.setCheckable(False)
+
+        # Кнопка экспорта событий
+        self.button_export = QPushButton("Экспорт")
+        self.button_export.clicked.connect(self.the_export_button_was_clicked)
+        self.button_export.setCheckable(False)
 
         # Второй слой
         # Реализация календаря
@@ -135,11 +153,20 @@ class MainWindow(QMainWindow):
         layout_main = QHBoxLayout()
         layout0 = QVBoxLayout()
         layout0.addWidget(self.list_events)
-        layout0_123 = QHBoxLayout()
-        layout0_123.addWidget(self.button_add_event)
-        layout0_123.addWidget(self.button_edit_event)
-        layout0_123.addWidget(self.button_delete_event)
-        layout0.addLayout(layout0_123)
+        layout11_1 = QVBoxLayout()
+        layout11_1.addWidget(self.button_add_event)
+        layout11_1.addWidget(self.button_import)
+        layout11_2 = QVBoxLayout()
+        layout11_2.addWidget(self.button_edit_event)
+        layout11_2.addWidget(self.button_export)
+        layout11_3 = QVBoxLayout()
+        layout11_3.addWidget(self.button_delete_event)
+        layout11_3.addWidget(self.button_all_events)
+        layout11_123 = QHBoxLayout()
+        layout11_123.addLayout(layout11_1)
+        layout11_123.addLayout(layout11_2)
+        layout11_123.addLayout(layout11_3)
+        layout0.addLayout(layout11_123)
         layout_main.addLayout(layout0)
         layout1 = QVBoxLayout()
         layout1.addWidget(self.calendar, alignment=Qt.AlignmentFlag.AlignCenter)
@@ -176,11 +203,13 @@ class MainWindow(QMainWindow):
             self.calendar.setSelectedDate(QDate.currentDate())
             print(self.title_line.isEnabled())
             self.clear_tuple_lines(is_now_editing=self.title_line.isEnabled())
-            for widget in self.line_widget_tuple:
-                widget.setEnabled(True)
-            self.list_events.setEnabled(False)
-            self.button_edit_event.setEnabled(False)
-            self.button_delete_event.setEnabled(False)
+            self.freeze_left(True)
+            self.freeze_right(False)
+            # for widget in self.line_widget_tuple:
+            #     widget.setEnabled(True)
+            # self.list_events.setEnabled(False)
+            # self.button_edit_event.setEnabled(False)
+            # self.button_delete_event.setEnabled(False)
             # self.info_view.setText('Заполните строки выше.')
             self.button_add_event.setText('Сохранить событие')
         else:
@@ -192,11 +221,13 @@ class MainWindow(QMainWindow):
                 self.info_view.setText('Некорректные даты и/или время события.')
                 self.button_add_event.setChecked(True)
             else:
-                self.list_events.setEnabled(True)
-                self.button_edit_event.setEnabled(True)
-                self.button_delete_event.setEnabled(True)
-                for widget in self.line_widget_tuple:
-                    widget.setEnabled(False)
+                self.freeze_left(False)
+                self.freeze_right(True)
+                # self.list_events.setEnabled(True)
+                # self.button_edit_event.setEnabled(True)
+                # self.button_delete_event.setEnabled(True)
+                # for widget in self.line_widget_tuple:
+                #     widget.setEnabled(False)
                 id = self.event_presenter.create_id(self.title_line.text(), self.date_start_line.date(),
                                                     self.time_start_line.time())
                 event = EventFull(id, self.title_line.text(),
@@ -242,12 +273,14 @@ class MainWindow(QMainWindow):
         self.button_edit_is_checked = self.button_edit_event.isChecked()
         if self.button_edit_is_checked:
             self.button_edit_event.setText("Сохранить изменения")
-            self.list_events.setEnabled(False)
-            self.list_events.setEnabled(False)
-            self.button_add_event.setEnabled(False)
-            self.button_delete_event.setEnabled(False)
-            for widget in self.line_widget_tuple:
-                widget.setEnabled(True)
+            self.freeze_left(True)
+            self.freeze_right(False)
+            # self.list_events.setEnabled(False)
+            # self.list_events.setEnabled(False)
+            # self.button_add_event.setEnabled(False)
+            # self.button_delete_event.setEnabled(False)
+            # for widget in self.line_widget_tuple:
+            #     widget.setEnabled(True)
         else:
             if not self.title_line.text():
                 self.info_view.setText('Событие должно иметь название!')
@@ -257,13 +290,14 @@ class MainWindow(QMainWindow):
                 self.info_view.setText('Некорректные даты и/или время события.')
                 self.button_edit_event.setChecked(True)
             else:
-                for widget in self.line_widget_tuple:
-                    widget.setEnabled(False)
                 self.button_edit_event.setText("Редактировать событие")
-                self.list_events.setEnabled(True)
-                self.button_add_event.setEnabled(True)
-                self.button_delete_event.setEnabled(True)
-                self.list_events.setEnabled(True)
+                self.freeze_left(False)
+                # for widget in self.line_widget_tuple:
+                #     widget.setEnabled(False)
+                self.freeze_right(True)
+                # self.list_events.setEnabled(True)
+                # self.button_add_event.setEnabled(True)
+                # self.button_delete_event.setEnabled(True)
                 current_item = self.list_events.currentItem()
                 event_to_delete = self.event_presenter.get_event_via_tool_tip(current_item.toolTip())
                 self.event_presenter.delete_event(event_to_delete)
@@ -291,13 +325,6 @@ class MainWindow(QMainWindow):
         # print(self.event_presenter.get_events())
         self.info_view.setText('Событие удалено.')
 
-    # Сигнал о нажатии на событие ПКМ
-    def show_ctx_menu_list_events(self, event):
-        menu = QMenu()
-        menu.addAction(QAction("Отредактировать событие", self))
-        menu.addAction(QAction("Удалить событие", self))
-        menu.exec(event.globalPos())
-
     def calendar_day_changed(self):
         if self.editing_enabled:
             self.date_start_line.setDate(self.calendar.selectedDate())
@@ -321,6 +348,66 @@ class MainWindow(QMainWindow):
                 self.list_events.addItem(self.item)
         else:
             self.info_view.setText('Событий на этот день не найдено.')
+
+    def the_all_events_button_was_clicked(self):
+        self.list_events.clear()
+        for event in self.event_presenter.model.events:
+            event_str = self.event_presenter.get_event_to_str_via_tool_tip(event.id)
+            self.item = QListWidgetItem()
+            self.item.setText(event_str.strip())
+            self.item.setToolTip(event.id)
+            self.list_events.addItem(self.item)
+
+    def the_import_button_was_clicked(self):
+        print("Import button was clicked.")
+        # Тут надо вызов диалогого окна
+        dialog_import = QFileDialog(self)
+        dialog_import.setFileMode(QFileDialog.FileMode.ExistingFile)
+        dialog_import.setNameFilter("Календарь (*.ics)")
+        if os.path.exists(r"D:\Download\ilia.lad@mail.ru.ical (2)"):
+            dialog_import.setDirectory(r"D:\Download\ilia.lad@mail.ru.ical (2)")
+        elif os.path.exists(r"C:"):
+            dialog_import.setDirectory(r"C:")
+        dialog_import.setViewMode(QFileDialog.ViewMode.Detail) # можно поэксперементировать
+        if dialog_import.exec():
+            file_to_import_path = dialog_import.selectedFiles()
+            if file_to_import_path:
+                path = Path(file_to_import_path[0])
+                os.chdir(os.path.dirname(path))
+                with open(os.path.basename(path), 'r', encoding='utf-8') as file_to_import:
+                    # print(type(file_to_import))
+                    # print(file_to_import)
+                    # print(path)
+                    self.event_presenter.import_calendar(file_to_import)
+                    # file_to_import.close()
+        pass
+
+    def the_export_button_was_clicked(self):
+        # print("Export button was clicked.")
+        # print(self.event_presenter.get_events())
+        file_name, _ = QFileDialog.getSaveFileName(self, "Сохранить календарь", "C:", "Calendar (*.ics);; Text file (*.txt)")
+        if file_name:
+            with open(file_name, 'w', encoding='utf-8') as import_file:
+                self.event_presenter.export_calendar(import_file)
+
+    def freeze_left(self, freeze=True):
+        buttons = [self.button_export, self.button_import,
+                   self.button_all_events, self.button_add_event,
+                   self.button_delete_event, self.button_edit_event]
+        # Возможно можно чутка улучшить
+        if freeze:
+            self.list_events.setEnabled(False)
+            for widget in buttons:
+                if not widget.isChecked():
+                    widget.setEnabled(False)
+        else:
+            self.list_events.setEnabled(True)
+            for widget in buttons:
+                widget.setEnabled(True)
+
+    def freeze_right(self, freeze=True):
+        for widget in self.line_widget_tuple:
+            widget.setEnabled(not freeze)
 
 class EventView:
     @staticmethod

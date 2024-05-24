@@ -70,3 +70,19 @@ class EventPresenter:
     def is_dates_valid(self, date_start: QDate, date_end: QDate, time_start: QDate, time_end: QDate) -> bool:
         print(date_start.toString('yyyyMMdd') + time_start.toString('hhmm'), date_end.toString('yyyyMMdd') + time_end.toString('hhmm'))
         return date_start.toString('yyyyMMdd') + time_start.toString('hhmm') <= date_end.toString('yyyyMMdd') + time_end.toString('hhmm')
+
+    def import_calendar(self, calendar_file):
+        # print("File to import name", calendar_file)
+        # Здесь доступен файл для импорта в формате .ics с именем calendar_file
+        # Он автоматически закроется после обработки здесь
+        pass
+
+    def export_calendar(self, file):
+        list_of_dict_events = []
+        for event in self.model.events:
+            list_of_dict_events.append(self.get_event_as_dict(event))
+        # print(list_of_dict_events)
+        # Здесь нужно поработать с этим словарём и записать всё как положено в файл file.
+        # Содержимое файла автоматически запишется в созданный файл
+        # Он автоматически закроется после обработки здесь
+        print("File export success.")
