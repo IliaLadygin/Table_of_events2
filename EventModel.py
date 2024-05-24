@@ -1,4 +1,7 @@
 from Event import EventFull
+import icalendar
+import os
+from datetime import datetime
 
 
 class EventModel:
@@ -15,8 +18,8 @@ class EventModel:
     def del_event(self, event: EventFull):
         self.events.remove(event)
 
-    def del_event_from_file(self, event: EventFull):
-        print("Deleting event from file (not worked)")
+    # def del_event_from_file(self, event: EventFull):
+        # print("Deleting event from file (not worked)")
 
     def update(self, index: int, new_event: EventFull):
         self.events[index] = new_event
@@ -95,8 +98,59 @@ class EventModel:
         print("Error in get_event_via_tool_tip")
         raise Exception("Error in get_event_via_tool_tip")
 
-    def save_event_to_file(self, event: EventFull):
-        print("Saving event to file... (not worked)")
+    # def save_event_to_file(self, event: EventFull):
+        # print("Saving event to file... (not worked)")
 
-    def edit_event_to_file(self, event: EventFull):
-        print("Editing event to file... (not worked)")
+    # def edit_event_to_file(self, event: EventFull):
+        # print("Editing event to file... (not worked)")
+
+    def import_calendar(self, path):
+        if os.path.exists(path) and path.endswith('.ics'):
+            g = open(path,'rb')
+            try:
+                gcal = icalendar.Calendar.from_ical(g.read())
+                for component in gcal.walk():
+                    if component.name == "VEVENT":
+                        dstart = component.get('dtstart').dt
+                        dend = component.get('dtend').dt
+                        event = EventFull(id=str(component.get('uid')), title=component.get('summary'),
+                                          date_start=dstart.strftime('%d.%m.%Y'),
+                                          date_end=dend.strftime('%d.%m.%Y'), time_start=dstart.strftime('%H:%M'),
+                                          time_end=dend.strftime('%H:%M'), note=component.get('description') or '',
+                                          place=component.get('location') or '', hyperlink=str(component.get('url')) or '')
+                        self.add_new_event(event)
+            except ValueError:
+                print('Uncorrect file!')
+            finally:
+                g.close()
+
+    def add_event_in_calendar(self, event: EventFull, cal: icalendar.Calendar):
+        cal_event = icalendar.Event()
+        cal_event.add('uid', event.id)
+        cal_event.add('summary', event.title)
+        cal_event.add('dtstart', datetime.strptime(event.date_start + event.time_start, '%d.%m.%Y%H:%M'))
+        cal_event.add('dtend', datetime.strptime(event.date_end + event.time_start, '%d.%m.%Y%H:%M'))
+        cal_event.add('location', event.place)
+        cal_event.add('description', event.note)
+        cal_event.add('url', event.hyperlink)
+
+        cal.add_component(cal_event)
+
+    def export_calendar(self, path: str):
+        cal = icalendar.Calendar()
+        cal.add('prodid', '-//Windows Calendar//')
+        cal.add('version', '2.0')
+
+        for event in self.events:
+            self.add_event_in_calendar(event, cal)
+
+        f = open(path, 'wb')
+        f.write(cal.to_ical())
+        f.close()
+
+    def first_note(self, path: str):
+        if len(self.events) == 0:
+            event = EventFull("id", "Title", "01.01.2000", "01.01.2000", "00:00", "00:00",
+                              note="Hello! Here you can write a description of your event. You can delete this note.",
+                              place="You're in Calendar App", hyperlink="Here's hyperlink")
+            self.add_new_event(event)

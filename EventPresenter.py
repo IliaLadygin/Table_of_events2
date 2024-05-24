@@ -1,5 +1,6 @@
 from Event import Event, EventFull
 from PyQt6.QtCore import QDateTime, QDate
+import icalendar
 
 
 class EventPresenter:
@@ -22,14 +23,14 @@ class EventPresenter:
         # print('.')
         return self.model.event_to_str(event)
 
-    def save_new_event_to_file(self, event: EventFull):
-        return self.model.save_event_to_file(event)
+    # def save_new_event_to_file(self, event: EventFull):
+        # return self.model.save_event_to_file(event)
 
-    def delete_event_from_file(self, event: EventFull):
-        return self.model.del_event_from_file(event)
+    # def delete_event_from_file(self, event: EventFull):
+        # return self.model.del_event_from_file(event)
 
-    def edit_event_in_file(self, event: EventFull):
-        return self.model.edit_event_to_file(event)
+    # def edit_event_in_file(self, event: EventFull):
+        # return self.model.edit_event_to_file(event)
 
     def delete_event_by_index(self, index):
         self.model.delete(index)
@@ -59,11 +60,11 @@ class EventPresenter:
         events = self.model.get_all_events_as_list()
         events_to_return = []
         for event in events:
-            # print(event.title)
-            # print(date)
-            # print(date.toString(self.date_format))
-            # print(event.date_start, date.toString(self.date_format), event.date_end)
             if event.date_start <= date.toString(self.date_format) <= event.date_end:
+                print(event.title)
+                print(date)
+                print(date.toString(self.date_format))
+                print(event.date_start, date.toString(self.date_format), event.date_end)
                 events_to_return.append(event)
         return events_to_return
 
@@ -71,18 +72,30 @@ class EventPresenter:
         print(date_start.toString('yyyyMMdd') + time_start.toString('hhmm'), date_end.toString('yyyyMMdd') + time_end.toString('hhmm'))
         return date_start.toString('yyyyMMdd') + time_start.toString('hhmm') <= date_end.toString('yyyyMMdd') + time_end.toString('hhmm')
 
-    def import_calendar(self, calendar_file):
-        # print("File to import name", calendar_file)
-        # Здесь доступен файл для импорта в формате .ics с именем calendar_file
-        # Он автоматически закроется после обработки здесь
-        pass
+    # def import_calendar(self, calendar_file):
+    #     # print("File to import name", calendar_file)
+    #     # Здесь доступен файл для импорта в формате .ics с именем calendar_file
+    #     # Он автоматически закроется после обработки здесь
+    #     pass
 
-    def export_calendar(self, file):
-        list_of_dict_events = []
-        for event in self.model.events:
-            list_of_dict_events.append(self.get_event_as_dict(event))
-        # print(list_of_dict_events)
-        # Здесь нужно поработать с этим словарём и записать всё как положено в файл file.
-        # Содержимое файла автоматически запишется в созданный файл
-        # Он автоматически закроется после обработки здесь
-        print("File export success.")
+    # def export_calendar(self, file):
+    #     list_of_dict_events = []
+    #     for event in self.model.events:
+    #         list_of_dict_events.append(self.get_event_as_dict(event))
+    #     # print(list_of_dict_events)
+    #     # Здесь нужно поработать с этим словарём и записать всё как положено в файл file.
+    #     # Содержимое файла автоматически запишется в созданный файл
+    #     # Он автоматически закроется после обработки здесь
+    #     print("File export success.")
+
+    def import_calendar(self, path: str):
+        self.model.import_calendar(path)
+
+    def export_calendar(self, path: str):
+        self.model.export_calendar(path)
+
+    def add_event_in_calendar_file(self, event: EventFull, cal: icalendar.Calendar):
+        self.model.add_event_in_calendar(event, cal)
+
+    def first_note(self, path: str):
+        self.model.first_note(path)

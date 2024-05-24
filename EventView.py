@@ -229,8 +229,6 @@ class MainWindow(QMainWindow):
                 self.item.setToolTip(event.id)
                 self.list_events.addItem(self.item)
                 # current_item.setText(self.event_presenter.get_event_to_str(event))
-                # Сохранение новой информации в файл
-                self.event_presenter.save_new_event_to_file(event)
                 self.button_add_event.setText('Добавить событие')
                 self.info_view.setText('Событие добавлено.')
         self.editing_enabled = self.title_line.isEnabled()
@@ -290,8 +288,6 @@ class MainWindow(QMainWindow):
                                   note=self.note_line.document().toRawText(), place=self.place_line.text(), hyperlink=self.hyperlink_line.text())
                 self.event_presenter.add_event(event)
                 current_item.setText(self.event_presenter.get_event_to_str(event))
-                # Сохранение новой информации в файл
-                self.event_presenter.save_new_event_to_file(event)
                 self.info_view.setText('Изменения сохранены.')
         self.editing_enabled = self.title_line.isEnabled()
 
@@ -302,7 +298,7 @@ class MainWindow(QMainWindow):
         event = self.event_presenter.get_event_via_tool_tip(id)
         item_to_delete = self.list_events.takeItem(self.list_events.currentRow())
         # Сохранение изменений в файл
-        self.event_presenter.delete_event_from_file(event)
+        # self.event_presenter.delete_event_from_file(event)
         self.event_presenter.delete_event(event)
         self.clear_tuple_lines()
         # print(self.event_presenter.get_events())
@@ -348,29 +344,32 @@ class MainWindow(QMainWindow):
 
     def the_import_button_was_clicked(self):
         print("Import button was clicked.")
-        dialog_import = QFileDialog(self)
-        dialog_import.setFileMode(QFileDialog.FileMode.ExistingFile)
-        dialog_import.setNameFilter("Календарь (*.ics)")
-        if os.path.exists(r"D:\Download\ilia.lad@mail.ru.ical (2)"):
-            dialog_import.setDirectory(r"D:\Download\ilia.lad@mail.ru.ical (2)")
-        elif os.path.exists(r"C:"):
-            dialog_import.setDirectory(r"C:")
-        dialog_import.setViewMode(QFileDialog.ViewMode.Detail)
-        if dialog_import.exec():
-            file_to_import_path = dialog_import.selectedFiles()
-            if file_to_import_path:
-                path = Path(file_to_import_path[0])
-                os.chdir(os.path.dirname(path))
-                with open(os.path.basename(path), 'r', encoding='utf-8') as file_to_import:
-                    self.event_presenter.import_calendar(file_to_import)
+        file_name, _ = QFileDialog.getOpenFileName(self, "Сохранить календарь", "C:",
+                                                   "Calendar (*.ics)")
+        if file_name:
+            self.event_presenter.import_calendar(file_name)
+            self.fill_list_events_full()
+        # dialog_import = QFileDialog(self)
+        # dialog_import.setFileMode(QFileDialog.FileMode.ExistingFile)
+        # dialog_import.setNameFilter("Календарь (*.ics)")
+        # if os.path.exists(r"D:\Download\ilia.lad@mail.ru.ical (2)"):
+        #     dialog_import.setDirectory(r"D:\Download\ilia.lad@mail.ru.ical (2)")
+        # elif os.path.exists(r"C:"):
+        #     dialog_import.setDirectory(r"C:")
+        # dialog_import.setViewMode(QFileDialog.ViewMode.Detail)
+        # if dialog_import.exec():
+        #     file_to_import_path = dialog_import.selectedFiles()
+        #     if file_to_import_path:
+        #         path = Path(file_to_import_path[0])
+        #         os.chdir(os.path.dirname(path))
+        #         with open(os.path.basename(path), 'r', encoding='utf-8') as file_to_import:
+        #             self.event_presenter.import_calendar(file_to_import)
 
     def the_export_button_was_clicked(self):
         print("Export file...")
         file_name, _ = QFileDialog.getSaveFileName(self, "Сохранить календарь", "C:", "Calendar (*.ics);; Text file (*.txt)")
         if file_name:
-            with open(file_name, 'w', encoding='utf-8') as import_file:
-                self.event_presenter.export_calendar(import_file)
-            print("Export file success.")
+            self.event_presenter.export_calendar(file_name)
 
     def freeze_left(self, freeze=True):
         buttons = [self.button_export, self.button_import,
