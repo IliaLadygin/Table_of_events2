@@ -32,28 +32,18 @@ class MainWindow(QMainWindow):
 
         # Общие настройки
         self.setBaseSize(QSize(1000, 1000)) # Задание стандартных размеров окна
-        # self.n_times_clicked = 0
-        self.setWindowTitle("Table of events") # Название окна
+        self.setWindowTitle("Расписание задач") # Название окна
 
         self.event_presenter = event_presenter
         # Флаг об возможности редакта.
         self.editing_enabled = False
         # Виджеты (слева направо, сверху вниз)
-        # Первый слой
+        # Левый слой
         # Виджет полного списка событий
         self.list_events = QListWidget()
-
         self.list_events.setMouseTracking(False)
         self.list_events.setSortingEnabled(False)
-
-        for event in event_presenter.model.events:
-            event_str = event_presenter.get_event_to_str_via_tool_tip(event.id)
-            self.item = QListWidgetItem()
-            self.item.setText(event_str.strip())
-            self.item.setToolTip(event.id)
-            self.list_events.addItem(self.item)
-        self.current_event_in_list = self.list_events.currentItem()
-        self.list_events.setCurrentItem(self.item)
+        self.fill_list_events_full()
         self.list_events.itemClicked.connect(self.current_item_was_changed)
 
         # Кнопка добавления события
@@ -75,9 +65,6 @@ class MainWindow(QMainWindow):
         # Кнопка удаления события
         self.button_delete_event = QPushButton("Удалить событие")
         self.button_delete_event.clicked.connect(self.the_delete_button_was_clicked)
-        # self.button_delete_event.setCheckable(True)
-        # self.button_delete_is_checked = False
-        # self.button_delete_event.setChecked(self.button_delete_is_checked)
 
         # Кнопка показа всех событий
         self.button_all_events = QPushButton("Показать всё")
@@ -99,7 +86,6 @@ class MainWindow(QMainWindow):
         self.calendar = QCalendarWidget()
         self.calendar.setMaximumHeight(200)
         self.calendar.setGridVisible(True)
-        # print(self.calendar.calendar())
         self.calendar.selectionChanged.connect(self.calendar_day_changed)
         self.calendar.showSelectedDate()
 
@@ -118,15 +104,16 @@ class MainWindow(QMainWindow):
         for name, widget in self.list_info.items():
             if name.lower() != 'описание':
                 self.container_full_view_left.addWidget(QLabel(name))
-        # Позор моим навыкам
+        # Редактируемые поля
         self.title_line, self.date_start_line, self.date_end_line, self.time_start_line, self.time_end_line, self.place_line, self.hyperlink_line, self.note_line = tuple([widget() for widget in self.list_info.values()])
         self.line_widget_tuple = (self.title_line,
-                                 self.date_end_line, self.date_start_line,
-                                 self.time_start_line, self.time_end_line,
-                                 self.note_line, self.place_line, self.hyperlink_line)
+                                  self.date_end_line, self.date_start_line,
+                                  self.time_start_line, self.time_end_line,
+                                  self.note_line, self.place_line, self.hyperlink_line)
         for widget in self.line_widget_tuple:
             widget.setEnabled(False)
 
+        # Создание макета (для полной информации о событии)
         self.container_full_view_right.addWidget(self.title_line)
         self.container_full_view_right.addWidget(self.date_start_line)
         self.container_full_view_right.addWidget(self.date_end_line)
@@ -146,7 +133,7 @@ class MainWindow(QMainWindow):
         self.container_full_view_final.addLayout(self.container_full_view)
         self.container_full_view_final.addLayout(self.container_note_view)
 
-        # Информатор (пока не знаю, буду ли делать)
+        # Информатор
         self.info_view = QLabel()
 
         # Добавление слоёв в которых располагаются виджеты
@@ -177,8 +164,6 @@ class MainWindow(QMainWindow):
         # Макет
         container = QWidget()
         container.setLayout(layout_main)
-
-        # Устанавливаем центральный виджет Window.
         self.setCentralWidget(container)
 
     # Удаление информации в строках
@@ -250,7 +235,6 @@ class MainWindow(QMainWindow):
                 self.info_view.setText('Событие добавлено.')
         self.editing_enabled = self.title_line.isEnabled()
 
-
     # Сигнал об изменении текущего элемента в списке событий
     def current_item_was_changed(self):
         # print(self.list_events.currentItem().text())
@@ -266,7 +250,6 @@ class MainWindow(QMainWindow):
         self.place_line.setText(event.place)
         self.hyperlink_line.setText(event.hyperlink)
         self.info_view.setText('')
-        # self.event_full_view.setText(str(self.list_events.currentRow()))
 
     # Триггер нажатия кнопки edit
     def the_edit_button_was_toggled(self):
@@ -349,7 +332,7 @@ class MainWindow(QMainWindow):
         else:
             self.info_view.setText('Событий на этот день не найдено.')
 
-    def the_all_events_button_was_clicked(self):
+    def fill_list_events_full(self):
         self.list_events.clear()
         for event in self.event_presenter.model.events:
             event_str = self.event_presenter.get_event_to_str_via_tool_tip(event.id)
@@ -358,9 +341,13 @@ class MainWindow(QMainWindow):
             self.item.setToolTip(event.id)
             self.list_events.addItem(self.item)
 
+    # Сигнал о нажатии на кнопку Показать всё
+    def the_all_events_button_was_clicked(self):
+        self.list_events.clear()
+        self.fill_list_events_full()
+
     def the_import_button_was_clicked(self):
         print("Import button was clicked.")
-        # Тут надо вызов диалогого окна
         dialog_import = QFileDialog(self)
         dialog_import.setFileMode(QFileDialog.FileMode.ExistingFile)
         dialog_import.setNameFilter("Календарь (*.ics)")
@@ -368,42 +355,41 @@ class MainWindow(QMainWindow):
             dialog_import.setDirectory(r"D:\Download\ilia.lad@mail.ru.ical (2)")
         elif os.path.exists(r"C:"):
             dialog_import.setDirectory(r"C:")
-        dialog_import.setViewMode(QFileDialog.ViewMode.Detail) # можно поэксперементировать
+        dialog_import.setViewMode(QFileDialog.ViewMode.Detail)
         if dialog_import.exec():
             file_to_import_path = dialog_import.selectedFiles()
             if file_to_import_path:
                 path = Path(file_to_import_path[0])
                 os.chdir(os.path.dirname(path))
                 with open(os.path.basename(path), 'r', encoding='utf-8') as file_to_import:
-                    # print(type(file_to_import))
-                    # print(file_to_import)
-                    # print(path)
                     self.event_presenter.import_calendar(file_to_import)
-                    # file_to_import.close()
-        pass
 
     def the_export_button_was_clicked(self):
-        # print("Export button was clicked.")
-        # print(self.event_presenter.get_events())
+        print("Export file...")
         file_name, _ = QFileDialog.getSaveFileName(self, "Сохранить календарь", "C:", "Calendar (*.ics);; Text file (*.txt)")
         if file_name:
             with open(file_name, 'w', encoding='utf-8') as import_file:
                 self.event_presenter.export_calendar(import_file)
+            print("Export file success.")
 
     def freeze_left(self, freeze=True):
         buttons = [self.button_export, self.button_import,
                    self.button_all_events, self.button_add_event,
                    self.button_delete_event, self.button_edit_event]
-        # Возможно можно чутка улучшить
-        if freeze:
-            self.list_events.setEnabled(False)
-            for widget in buttons:
-                if not widget.isChecked():
-                    widget.setEnabled(False)
-        else:
-            self.list_events.setEnabled(True)
-            for widget in buttons:
-                widget.setEnabled(True)
+        # Старый вариант
+        # if freeze:
+        #     self.list_events.setEnabled(False)
+        #     for widget in buttons:
+        #         if not widget.isChecked():
+        #             widget.setEnabled(False)
+        # else:
+        #     self.list_events.setEnabled(True)
+        #     for widget in buttons:
+        #         widget.setEnabled(True)
+        # self.list_events.setEnabled(not freeze)
+        for widget in buttons:
+            if not widget.isChecked():
+                widget.setEnabled(not freeze)
 
     def freeze_right(self, freeze=True):
         for widget in self.line_widget_tuple:
