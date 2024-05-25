@@ -18,9 +18,6 @@ class EventModel:
     def del_event(self, event: EventFull):
         self.events.remove(event)
 
-    # def del_event_from_file(self, event: EventFull):
-        # print("Deleting event from file (not worked)")
-
     def update(self, index: int, new_event: EventFull):
         self.events[index] = new_event
 
@@ -32,7 +29,6 @@ class EventModel:
                 " Time end = " + str(self.events[i].time_end)for i in range(len(self.events))]
 
     def get_all_events_as_list(self):
-        # print(list(self.events))
         return self.events
 
     @staticmethod
@@ -82,8 +78,6 @@ class EventModel:
     def get_event_via_tool_tip(self, tool_tip: str):
         for event in self.events:
             if event.id.lower() == tool_tip.lower():
-                # print(tool_tip)
-                # print(event.title)
                 return event
 
     def event_to_str(self, event: EventFull):
@@ -97,12 +91,6 @@ class EventModel:
                 return event.title + "\n" + self.get_beauty_date(event) + "\n" + self.get_beauty_time(event) + ('', "\n" + event.place)[event.place != '']
         print("Error in get_event_via_tool_tip")
         raise Exception("Error in get_event_via_tool_tip")
-
-    # def save_event_to_file(self, event: EventFull):
-        # print("Saving event to file... (not worked)")
-
-    # def edit_event_to_file(self, event: EventFull):
-        # print("Editing event to file... (not worked)")
 
     def import_calendar(self, path):
         if os.path.exists(path) and path.endswith('.ics'):

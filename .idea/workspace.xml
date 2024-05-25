@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0640c365-1e7c-4d70-adb8-a52018d1712a" name="Changes" comment="Table v2.1 (fix calendar)">
+    <list default="true" id="0640c365-1e7c-4d70-adb8-a52018d1712a" name="Changes" comment="Table v2.2 (fix problems)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/EventView.py" beforeDir="false" afterPath="$PROJECT_DIR$/EventView.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EventModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/EventModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/EventPresenter.py" beforeDir="false" afterPath="$PROJECT_DIR$/EventPresenter.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -212,7 +212,7 @@
       <workItem from="1716443637193" duration="593000" />
       <workItem from="1716526511330" duration="6191000" />
       <workItem from="1716552496178" duration="2749000" />
-      <workItem from="1716609557399" duration="2866000" />
+      <workItem from="1716609557399" duration="3643000" />
     </task>
     <task id="LOCAL-00001" summary="Initial point">
       <option name="closed" value="true" />
@@ -294,7 +294,15 @@
       <option name="project" value="LOCAL" />
       <updated>1716610521545</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Table v2.2 (fix problems)">
+      <option name="closed" value="true" />
+      <created>1716613097067</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1716613097067</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -322,7 +330,8 @@
     <MESSAGE value="GUI v1.2" />
     <MESSAGE value="Table v2.0" />
     <MESSAGE value="Table v2.1 (fix calendar)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Table v2.1 (fix calendar)" />
+    <MESSAGE value="Table v2.2 (fix problems)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Table v2.2 (fix problems)" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Table_of_events2$EventView.coverage" NAME="EventView Coverage Results" MODIFIED="1714999571967" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
