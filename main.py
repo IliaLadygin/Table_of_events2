@@ -1,20 +1,9 @@
-from Event import EventFull
 from EventModel import EventModel
 from EventPresenter import EventPresenter
 from EventView import EventView, MainWindow
 import sys
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QLineEdit, QVBoxLayout, QWidget
+from PyQt6.QtWidgets import QApplication
 
-# Илья
-# GUI
-
-# Вика
-# База данных
-
-# Создаем несколько заметок
-# Добавить чтение событий из файла
 events = []
 # Создаем модель заметок
 event_model = EventModel(events)

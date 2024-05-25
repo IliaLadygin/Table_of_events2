@@ -1,24 +1,15 @@
-import sys
-# from PyQt6 import Cont
-# from PySide6.QtCore import
-from pathlib import Path
-import os
 from Event import EventFull
-from PyQt6.QtCore import QTime, QDate, QDateTime
+from PyQt6.QtCore import QTime, QDate
 from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import (QApplication,
-                             QMainWindow,
+from PyQt6.QtWidgets import (QMainWindow,
                              QLabel,
                              QLineEdit,
                              QVBoxLayout,
                              QWidget,
                              QPushButton,
                              QListWidget,
-                             QGridLayout,
                              QCalendarWidget,
                              QHBoxLayout,
-                             QMenu,
                              QTextEdit,
                              QListWidgetItem,
                              QDateEdit,
@@ -182,7 +173,6 @@ class MainWindow(QMainWindow):
     # Сигнал о нажатии Добавить событие
     def the_add_button_was_toggled(self):
         self.button_add_is_checked = self.button_add_event.isChecked()
-        # print(self.button_add_is_checked)
         if self.button_add_is_checked:
             self.calendar.showToday()
             self.calendar.setSelectedDate(QDate.currentDate())
@@ -190,12 +180,6 @@ class MainWindow(QMainWindow):
             self.clear_tuple_lines(is_now_editing=self.title_line.isEnabled())
             self.freeze_left(True)
             self.freeze_right(False)
-            # for widget in self.line_widget_tuple:
-            #     widget.setEnabled(True)
-            # self.list_events.setEnabled(False)
-            # self.button_edit_event.setEnabled(False)
-            # self.button_delete_event.setEnabled(False)
-            # self.info_view.setText('Заполните строки выше.')
             self.button_add_event.setText('Сохранить событие')
         else:
             if not self.title_line.text():
@@ -208,11 +192,6 @@ class MainWindow(QMainWindow):
             else:
                 self.freeze_left(False)
                 self.freeze_right(True)
-                # self.list_events.setEnabled(True)
-                # self.button_edit_event.setEnabled(True)
-                # self.button_delete_event.setEnabled(True)
-                # for widget in self.line_widget_tuple:
-                #     widget.setEnabled(False)
                 id = self.event_presenter.create_id(self.title_line.text(), self.date_start_line.date(),
                                                     self.time_start_line.time())
                 event = EventFull(id, self.title_line.text(),
@@ -228,16 +207,12 @@ class MainWindow(QMainWindow):
                 self.item.setText(event_str.strip())
                 self.item.setToolTip(event.id)
                 self.list_events.addItem(self.item)
-                # current_item.setText(self.event_presenter.get_event_to_str(event))
                 self.button_add_event.setText('Добавить событие')
                 self.info_view.setText('Событие добавлено.')
         self.editing_enabled = self.title_line.isEnabled()
 
     # Сигнал об изменении текущего элемента в списке событий
     def current_item_was_changed(self):
-        # print(self.list_events.currentItem().text())
-        # print(self.list_events.currentItem().toolTip())
-        # print(self.list_events.item())
         event = self.event_presenter.get_event_via_tool_tip(self.list_events.currentItem().toolTip())
         self.title_line.setText(event.title)
         self.date_start_line.setDate(QDate.fromString(event.date_start, self.event_presenter.date_format))
@@ -256,12 +231,6 @@ class MainWindow(QMainWindow):
             self.button_edit_event.setText("Сохранить изменения")
             self.freeze_left(True)
             self.freeze_right(False)
-            # self.list_events.setEnabled(False)
-            # self.list_events.setEnabled(False)
-            # self.button_add_event.setEnabled(False)
-            # self.button_delete_event.setEnabled(False)
-            # for widget in self.line_widget_tuple:
-            #     widget.setEnabled(True)
         else:
             if not self.title_line.text():
                 self.info_view.setText('Событие должно иметь название!')
@@ -273,12 +242,7 @@ class MainWindow(QMainWindow):
             else:
                 self.button_edit_event.setText("Редактировать событие")
                 self.freeze_left(False)
-                # for widget in self.line_widget_tuple:
-                #     widget.setEnabled(False)
                 self.freeze_right(True)
-                # self.list_events.setEnabled(True)
-                # self.button_add_event.setEnabled(True)
-                # self.button_delete_event.setEnabled(True)
                 current_item = self.list_events.currentItem()
                 event_to_delete = self.event_presenter.get_event_via_tool_tip(current_item.toolTip())
                 self.event_presenter.delete_event(event_to_delete)
@@ -297,11 +261,9 @@ class MainWindow(QMainWindow):
         id = current_item.toolTip()
         event = self.event_presenter.get_event_via_tool_tip(id)
         item_to_delete = self.list_events.takeItem(self.list_events.currentRow())
-        # Сохранение изменений в файл
         # self.event_presenter.delete_event_from_file(event)
         self.event_presenter.delete_event(event)
         self.clear_tuple_lines()
-        # print(self.event_presenter.get_events())
         self.info_view.setText('Событие удалено.')
 
     def calendar_day_changed(self):
@@ -310,9 +272,6 @@ class MainWindow(QMainWindow):
             self.date_end_line.setDate(self.calendar.selectedDate())
         else:
             events = self.event_presenter.get_events_via_qdate(self.calendar.selectedDate())
-            # print(self.calendar.selectedDate())
-            # self.calendar.showSelectedDate()
-            # print(events)
             self.fill_list_events_with(events)
 
     def fill_list_events_with(self, events):
@@ -349,21 +308,6 @@ class MainWindow(QMainWindow):
         if file_name:
             self.event_presenter.import_calendar(file_name)
             self.fill_list_events_full()
-        # dialog_import = QFileDialog(self)
-        # dialog_import.setFileMode(QFileDialog.FileMode.ExistingFile)
-        # dialog_import.setNameFilter("Календарь (*.ics)")
-        # if os.path.exists(r"D:\Download\ilia.lad@mail.ru.ical (2)"):
-        #     dialog_import.setDirectory(r"D:\Download\ilia.lad@mail.ru.ical (2)")
-        # elif os.path.exists(r"C:"):
-        #     dialog_import.setDirectory(r"C:")
-        # dialog_import.setViewMode(QFileDialog.ViewMode.Detail)
-        # if dialog_import.exec():
-        #     file_to_import_path = dialog_import.selectedFiles()
-        #     if file_to_import_path:
-        #         path = Path(file_to_import_path[0])
-        #         os.chdir(os.path.dirname(path))
-        #         with open(os.path.basename(path), 'r', encoding='utf-8') as file_to_import:
-        #             self.event_presenter.import_calendar(file_to_import)
 
     def the_export_button_was_clicked(self):
         print("Export file...")
@@ -375,17 +319,6 @@ class MainWindow(QMainWindow):
         buttons = [self.button_export, self.button_import,
                    self.button_all_events, self.button_add_event,
                    self.button_delete_event, self.button_edit_event]
-        # Старый вариант
-        # if freeze:
-        #     self.list_events.setEnabled(False)
-        #     for widget in buttons:
-        #         if not widget.isChecked():
-        #             widget.setEnabled(False)
-        # else:
-        #     self.list_events.setEnabled(True)
-        #     for widget in buttons:
-        #         widget.setEnabled(True)
-        # self.list_events.setEnabled(not freeze)
         for widget in buttons:
             if not widget.isChecked():
                 widget.setEnabled(not freeze)
@@ -394,22 +327,7 @@ class MainWindow(QMainWindow):
         for widget in self.line_widget_tuple:
             widget.setEnabled(not freeze)
 
-class EventView:
-    @staticmethod
-    def display_program():
-        pass
 
+class EventView:
     def __init__(self, presenter):
         self.presenter = presenter
-
-    def add_event_button_click(self, title, t_start, t_end):
-        pass
-
-    def delete_event_button_click(self, index):
-        pass
-
-    def edit_event_button_click(self, index, new_title, new_t_start, t_end):
-        pass
-
-    def update_events(self, events):
-        pass
