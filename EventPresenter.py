@@ -59,12 +59,15 @@ class EventPresenter:
     def get_events_via_qdate(self, date: QDate):
         events = self.model.get_all_events_as_list()
         events_to_return = []
+        # print(''.join(event.date_start.split('.')[::-1]))
+        # print(''.join(events[0].date_start.split('.')[::-1]), date.toString("yyyyMMdd"),
+        #       ''.join(events[0].date_end.split('.')[::-1]))
         for event in events:
-            if event.date_start <= date.toString(self.date_format) <= event.date_end:
-                print(event.title)
-                print(date)
-                print(date.toString(self.date_format))
-                print(event.date_start, date.toString(self.date_format), event.date_end)
+            if ''.join(event.date_start.split('.')[::-1]) <= date.toString("yyyyMMdd") <= ''.join(event.date_end.split('.')[::-1]):
+                # print(event.title)
+                # print(date)
+                # print(date.toString(self.date_format))
+                # print(''.join(event.date_start.split('.')[::-1]), date.toString("yyyy.MM.dd"), ''.join(event.date_end.split('.')[::-1]))
                 events_to_return.append(event)
         return events_to_return
 
